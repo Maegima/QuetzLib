@@ -17,22 +17,22 @@
 #include <ranges>
 
 CardPanel::CardPanel(MainWindow *parent, std::filesystem::directory_entry entry)
-    : wxPanel(parent->lwindow, wxID_ANY),
-      parent(parent),
-      file(FileInfo(entry, false)),
-      name(entry.path().filename().string()),
-      image(CreateImage(entry)),
-      label(CreateLabel(entry)),
-      m_mouseInside(false),
-      selected(false),
-      to_remove(false) {
+: wxPanel(parent->lwindow, wxID_ANY),
+  parent(parent),
+  file(FileInfo(entry, false)),
+  name(entry.path().filename().string()),
+  image(CreateImage(entry)),
+  label(CreateLabel(entry)),
+  m_mouseInside(false),
+  selected(false),
+  to_remove(false) {
     auto sizer = new wxBoxSizer(wxVERTICAL);
     SetSizer(sizer);
     sizer->AddSpacer(5);
     sizer->Add(image, 0);
     sizer->Add(label, 0, wxALIGN_CENTER);
     sizer->AddSpacer(10);
-    std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c){ return std::tolower(c); });
+    std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
     Bind(wxEVT_ENTER_WINDOW, &CardPanel::OnEnterPanel, this);
     Bind(wxEVT_LEAVE_WINDOW, &CardPanel::OnLeavePanel, this);
     Bind(wxEVT_AUX1_DOWN, &CardPanel::SkipMouseEvent, this);
@@ -105,18 +105,18 @@ std::pair<CardPanel::CardIterator, CardPanel::CardIterator> CardPanel::GetIterat
 const std::string CardPanel::GetFileValue(const std::string expression) {
     auto parts = Algorithm::split<std::vector>(expression, ',');
     std::string value = "";
-    if(parts.size() > 0 && parts[0].size() > 7 && parts[0].substr(0, 6) == "<file." && parts[0].back() == '>') {
+    if (parts.size() > 0 && parts[0].size() > 7 && parts[0].substr(0, 6) == "<file." && parts[0].back() == '>') {
         value = file[parts[0].substr(6, parts[0].size() - 7)];
     }
-    if(parts.size() > 2) {
+    if (parts.size() > 2) {
         std::regex re(parts[1], std::regex::egrep);
         std::string display = parts[2];
         std::smatch match;
         std::regex_search(value, match, re);
-        for(size_t i = 0; i < match.size(); i++) {
+        for (size_t i = 0; i < match.size(); i++) {
             std::string needle = "(" + std::to_string(i) + ")";
             size_t idx = display.find(needle);
-            if(idx != std::string::npos) {
+            if (idx != std::string::npos) {
                 display.replace(idx, needle.size(), match[i].str());
             }
         }
@@ -138,7 +138,7 @@ void CardPanel::OnLeftClick(wxMouseEvent &event) {
         }
         SelectItem(true);
     } else {
-        std::vector<std::list<CardPanel*>> cards = {parent->folder_cards, parent->file_cards};
+        std::vector<std::list<CardPanel *>> cards = {parent->folder_cards, parent->file_cards};
         for (auto const &card : std::ranges::join_view(cards)) {
             card->SelectItem(false, false);
         }
@@ -154,12 +154,15 @@ void CardPanel::SelectItem(bool select, bool highlight) {
     }
     this->selected = select;
     if (this->selected) {
+        this->image->ChangeLightness(130);
         this->label->SetBackgroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_GRAYTEXT));
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHTTEXT));
     } else if (highlight) {
+        this->image->ChangeLightness(130);
         this->label->SetBackgroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHT));
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHTTEXT));
     } else {
+        this->image->ChangeLightness(100);
         this->label->SetBackgroundColour(*wxWHITE);
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_BTNTEXT));
     }
@@ -178,7 +181,7 @@ void CardPanel::SkipMouseEvent(wxMouseEvent &event) {
     wxQueueEvent(GetParent()->GetEventHandler(), new wxMouseEvent(event.GetEventType()));
 }
 
-void CardPanel::OnCardMenuClick(wxCommandEvent& evt) {
+void CardPanel::OnCardMenuClick(wxCommandEvent &evt) {
     parent->ExecuteMenuEvent(evt.GetId());
 }
 
@@ -189,9 +192,9 @@ void CardPanel::OnFolderLeftClick(wxMouseEvent &event) {
 
 void CardPanel::OnFileLeftClick(wxMouseEvent &event) {
     std::list<std::pair<wxString, wxString>> list;
-    for(const auto &[key, expression] : parent->config.file_info){
+    for (const auto &[key, expression] : parent->config.file_info) {
         std::string value = GetFileValue(expression);
-        if(value != "<null>") {
+        if (value != "<null>") {
             list.push_back({key, wxString::FromUTF8(value)});
         }
     }
@@ -205,6 +208,7 @@ bool CardPanel::CompareCards::operator()(const CardPanel *c1, const CardPanel *c
 }
 
 void CardPanel::OnRightClick(wxMouseEvent &evt) {
+    this->OnLeftClick(evt);
     wxMenu menu;
     SelectItem(true);
     menu.Append(NOOP, "NOOP...");
@@ -218,7 +222,7 @@ bool CheckPosition(wxRect rect, wxPoint pos, int box) {
 }
 
 void CardPanel::OnEnterPanel(wxMouseEvent &event) {
-    this->image->ChangeLightness(130);
+    this->image->ChangeLightness(150);
     this->label->SetBackgroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHT));
     this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHTTEXT));
     if (selected) {
@@ -231,11 +235,14 @@ void CardPanel::OnLeavePanel(wxMouseEvent &event) {
     auto mousePosition = ClientToScreen(event.GetPosition());
     auto rect = GetScreenRect();
     if (CheckPosition(rect, mousePosition, 0)) {
-        this->image->ChangeLightness(130);
+        this->image->ChangeLightness(150);
         this->label->SetBackgroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHT));
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHTTEXT));
     } else {
-        this->image->ChangeLightness(100);
+        if (selected)
+            this->image->ChangeLightness(130);
+        else
+            this->image->ChangeLightness(100);
         this->label->SetBackgroundColour(*wxWHITE);
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_BTNTEXT));
     }
