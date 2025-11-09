@@ -218,7 +218,7 @@ void CardPanel::OnRightClick(wxMouseEvent &evt) {
 }
 
 bool CheckPosition(wxRect rect, wxPoint pos, int box) {
-    return rect.GetX() < pos.x - box && rect.GetRight() > pos.x + box && rect.GetY() < pos.y - box && rect.GetBottom() > pos.y + box;
+    return rect.GetX() <= pos.x - box && rect.GetRight() >= pos.x + box && rect.GetY() <= pos.y - box && rect.GetBottom() >= pos.y + box;
 }
 
 void CardPanel::OnEnterPanel(wxMouseEvent &event) {
