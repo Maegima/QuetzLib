@@ -1,0 +1,9 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+ConstructorInitializerIndentWidth: 0
+SortIncludes: Never
+ColumnLimit: 0
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+#AllowShortLoopsOnASingleLine: true
+#AllowShortBlocksOnASingleLine: Empty
