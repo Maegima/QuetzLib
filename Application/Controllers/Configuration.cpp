@@ -2,10 +2,10 @@
  * @file Configuration.cpp
  * @author André Lucas Maegima
  * @brief Configuration file class implementation
- * @version 0.4
- * @date 2024-04-06
+ * @version 0.5
+ * @date 2025-11-10
  *
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c) 2025
  *
  */
 
@@ -29,17 +29,8 @@ Configuration::Configuration(const std::string path) : file(std::fstream(path, s
                 for (auto &[key, value] : items) {
                     config.insert({key, value});
                 }
-            } else if (space == "folder") {
-                for (auto &[key, value] : items) {
-                    size_t pos = value.find("_");
-                    std::string name = value.substr(0, pos);
-                    int id = stoi(value.substr(pos + 1));
-                    folder.insert({id, {key, name}});
-                }
-            } else if (space == "organize") {
-                for (auto &[key, value] : items) {
-                    organize.insert({key, Algorithm::split<std::vector>(value, ',')});
-                }
+            } else if (space == "runners") {
+                runners = items;
             } else if (space == "image") {
                 for (auto &[key, value] : items) {
                     if(key == "dynamic") {

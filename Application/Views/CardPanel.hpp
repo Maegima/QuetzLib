@@ -2,10 +2,10 @@
  * @file CardPanel.hpp
  * @author André Lucas Maegima
  * @brief CardPanel class definition
- * @version 0.4
- * @date 2025-11-08
+ * @version 0.5
+ * @date 2025-11-10
  *
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c) 2025
  *
  */
 
@@ -20,7 +20,9 @@
 class MainWindow;
 
 enum {
-    NOOP = 2500
+    RUNNER_MASK = 0x7FF,
+    RUNNER_EVENT = 0x800,
+    FIRST_EVENT = 0x1000
 };
 
 class CardPanel : public wxPanel {
@@ -47,7 +49,6 @@ class CardPanel : public wxPanel {
     void OnLeftClick(wxMouseEvent& event);
     void OnTextClick(wxMouseEvent& event);
     void SkipMouseEvent(wxMouseEvent &event);
-    void OnCardMenuClick(wxCommandEvent& event);
 
     struct CompareCards {
         bool operator()(const CardPanel* c1, const CardPanel* c2) const;

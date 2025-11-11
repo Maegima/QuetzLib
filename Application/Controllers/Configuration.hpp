@@ -2,10 +2,10 @@
  * @file Configuration.hpp
  * @author André Lucas Maegima
  * @brief Configuration file class definition
- * @version 0.4
- * @date 2024-04-06
+ * @version 0.5
+ * @date 2025-11-10
  *
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c) 2025
  *
  */
 
@@ -21,8 +21,7 @@
 class Configuration {
    public:
     std::map<std::string, std::string> config;
-    std::map<int, std::pair<std::string, std::string>> folder;
-    std::map<std::string, std::vector<std::string>> organize;
+    std::vector<std::pair<std::string, std::string>> runners;
     std::map<std::string, wxImage*> image;
     std::vector<std::string> image_extension;
     std::vector<std::pair<std::string, std::string>> file_info;

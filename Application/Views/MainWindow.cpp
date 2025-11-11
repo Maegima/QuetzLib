@@ -2,15 +2,18 @@
  * @file MainWindow.cpp
  * @author André Lucas Maegima
  * @brief Listing window implementation
- * @version 0.4
- * @date 2025-11-08
+ * @version 0.5
+ * @date 2025-11-10
  *
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c) 2025
  *
  */
 
+#include "Views/CardPanel.hpp"
 #include "wx/wrapsizer.h"
 #include "MainWindow.hpp"
+#include "Controllers/Process.hpp"
+#include <ostream>
 
 MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Files", wxDefaultPosition, wxSize(1200, 600)),
     config(".conf"),
@@ -79,13 +82,13 @@ wxBoxSizer *MainWindow::CreateSizer() {
 
 void MainWindow::ChangePath(std::filesystem::path path) {
     std::error_code errorcode;
-     if (this->current != path && std::filesystem::is_directory(path, errorcode)) {
+    if (this->current != path && std::filesystem::is_directory(path, errorcode)) {
         this->current = path;
         backward->Enable(current != config.config["root"]);
         forward->Enable(forward_paths.size() > 0);
         UpdatePathBreadCrumbs();
         RefreshPath();
-     }
+    }
 }
 
 void MainWindow::UpdatePathBreadCrumbs() {
@@ -162,11 +165,13 @@ void MainWindow::RefreshPath(bool reload) {
  }
 
 void MainWindow::ExecuteMenuEvent(int eventId) {
-    bool refresh = false;
-    wxDirDialog* lsw = nullptr;
-    std::filesystem::path path = "";
-    std::filesystem::path root = this->config.config["root"];
-    std::cout << "MenuEvent:" << eventId << std::endl;
+    const std::filesystem::path path = selected_card->file.path;
+    if (eventId & RUNNER_EVENT) {
+        int runner_id = eventId & RUNNER_MASK;
+        std::string runner = config.runners[runner_id].second;
+        std::cout << "runner " << runner_id << ": " << runner << std::endl;
+        Process::execute(runner, {runner, path});
+    }
 }
 
 CardPanel* MainWindow::CreateCard(std::filesystem::directory_entry entry) {
@@ -210,10 +215,7 @@ void MainWindow::OnBreadCrumbClick(wxCommandEvent& event) {
 }
 
 void MainWindow::OnFolderMenuClick(wxCommandEvent& evt) {
-    switch (evt.GetId()) {
-        case NOOP:
-            break;
-    }
+    ExecuteMenuEvent(evt.GetId());
 }
 
 void MainWindow::OnKeyPress(wxKeyEvent& event) {
@@ -248,7 +250,9 @@ void MainWindow::OnKeyPress(wxKeyEvent& event) {
 
 void MainWindow::OnFolderRightClick(wxMouseEvent& evt) {
     wxMenu menu;
-    menu.Append(NOOP, "Noop...");
+    for(uint i = 0; i < config.runners.size(); i++) {
+        menu.Append(RUNNER_EVENT + i, config.runners[i].first);
+    }
     menu.Connect(wxEVT_MENU, wxCommandEventHandler(MainWindow::OnFolderMenuClick), nullptr, this);
     PopupMenu(&menu);
 }

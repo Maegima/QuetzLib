@@ -2,10 +2,10 @@
  * @file CardPanel.cpp
  * @author André Lucas Maegima
  * @brief CardPanel class implementation
- * @version 0.4
- * @date 2025-11-08
+ * @version 0.5
+ * @date 2025-11-10
  *
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c) 2025
  *
  */
 
@@ -181,10 +181,6 @@ void CardPanel::SkipMouseEvent(wxMouseEvent &event) {
     wxQueueEvent(GetParent()->GetEventHandler(), new wxMouseEvent(event.GetEventType()));
 }
 
-void CardPanel::OnCardMenuClick(wxCommandEvent &evt) {
-    parent->ExecuteMenuEvent(evt.GetId());
-}
-
 void CardPanel::OnFolderLeftClick(wxMouseEvent &event) {
     parent->forward_paths.clear();
     parent->ChangePath(file.path);
@@ -210,10 +206,10 @@ bool CardPanel::CompareCards::operator()(const CardPanel *c1, const CardPanel *c
 void CardPanel::OnRightClick(wxMouseEvent &evt) {
     this->OnLeftClick(evt);
     wxMenu menu;
-    SelectItem(true);
-    menu.Append(NOOP, "NOOP...");
-    wxMenu *moveMenu = new wxMenu();
-    menu.Connect(wxEVT_MENU, wxCommandEventHandler(CardPanel::OnCardMenuClick), nullptr, this);
+    for(uint i = 0; i < parent->config.runners.size(); i++) {
+        menu.Append(RUNNER_EVENT + i, parent->config.runners[i].first);
+    }
+    menu.Connect(wxEVT_MENU, wxCommandEventHandler(MainWindow::OnFolderMenuClick), nullptr, this->parent);
     PopupMenu(&menu);
 }
 

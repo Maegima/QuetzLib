@@ -31,6 +31,7 @@ class MainWindow : public wxFrame {
 
     void ChangePath(std::filesystem::path path);
     void ExecuteMenuEvent(int eventId);
+    void OnFolderMenuClick(wxCommandEvent& event);
 
    private:
     wxScrolledWindow* CreateListingPanel();
@@ -45,7 +46,6 @@ class MainWindow : public wxFrame {
 
     void OnSize(wxSizeEvent& event);
     void OnFolderRightClick(wxMouseEvent& event);
-    void OnFolderMenuClick(wxCommandEvent& event);
     void OnKeyPress(wxKeyEvent& event);
     void OnBreadCrumbClick(wxCommandEvent& event);
     void OnBackward(wxEvent& event);
