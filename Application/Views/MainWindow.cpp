@@ -3,7 +3,7 @@
  * @author André Lucas Maegima
  * @brief Listing window implementation
  * @version 0.5
- * @date 2025-11-10
+ * @date 2025-11-12
  *
  * @copyright Copyright (c) 2025
  *
@@ -15,10 +15,11 @@
 #include "Controllers/Process.hpp"
 #include <ostream>
 
-MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Files", wxDefaultPosition, wxSize(1200, 600)),
+MainWindow::MainWindow() : wxFrame(nullptr, wxID_ANY, "Files", wxDefaultPosition, wxSize(1200, 800)),
     config(".conf"),
     lwindow(CreateListingPanel()),
     iwindow(new InfoWindow(this, wxID_ANY, wxPoint(800, 0), wxSize(250, 600))),
+    twindow(new TerminalPanel(this, wxID_ANY, wxPoint(0, 600), wxSize(1200, 200))),
     breadcrumbs(new wxBoxSizer(wxHORIZONTAL)),
     forward(CreateBitmapButton(wxID_FORWARD, "forward")),
     backward(CreateBitmapButton(wxID_BACKWARD, "backward")),
@@ -41,8 +42,8 @@ wxScrolledWindow *MainWindow::CreateListingPanel() {
     window->Bind(wxEVT_RIGHT_DOWN, &MainWindow::OnFolderRightClick, this, wxID_ANY);
     window->Bind(wxEVT_CHAR_HOOK, &MainWindow::OnKeyPress, this, wxID_ANY);
 
-     window->Bind(wxEVT_AUX1_DOWN, &MainWindow::OnBackward, this);
-     window->Bind(wxEVT_AUX2_DOWN, &MainWindow::OnForward, this);
+    window->Bind(wxEVT_AUX1_DOWN, &MainWindow::OnBackward, this);
+    window->Bind(wxEVT_AUX2_DOWN, &MainWindow::OnForward, this);
 
     wxWrapSizer *sizer = new wxWrapSizer(wxHORIZONTAL);
     window->SetSizer(sizer);
@@ -76,7 +77,8 @@ wxBoxSizer *MainWindow::CreateSizer() {
 
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(toolbarSizer, 0, wxEXPAND);
-    sizer->Add(windowSizer, 1, wxEXPAND);
+    sizer->Add(windowSizer, 2, wxEXPAND);
+    sizer->Add(twindow, 1, wxEXPAND);
     return sizer;
 }
 
@@ -170,7 +172,7 @@ void MainWindow::ExecuteMenuEvent(int eventId) {
         int runner_id = eventId & RUNNER_MASK;
         std::string runner = config.runners[runner_id].second;
         std::cout << "runner " << runner_id << ": " << runner << std::endl;
-        Process::execute(runner, {runner, path});
+        Process::execute(runner, {runner, path}, twindow);
     }
 }
 
@@ -189,7 +191,8 @@ void MainWindow::OnSize(wxSizeEvent& event) {
         item->SetBorder(spacing / 2);
     }
     auto newSize = this->GetClientSize();
-    lwindow->SetSize(newSize.x - 250, newSize.y);
+    auto newHeight = std::max(600, 2*(newSize.y-32)/3);
+    lwindow->SetSize(newSize.x - 250, newHeight);
     Refresh();
     event.Skip();
 }

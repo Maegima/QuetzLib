@@ -8,12 +8,14 @@
 #include <filesystem>
 #include <list>
 #include "Controllers/Configuration.hpp"
+#include "Views/TerminalPanel.hpp"
 
 class MainWindow : public wxFrame {
    public:
     Configuration config;
     wxScrolledWindow* lwindow;
     InfoWindow* iwindow;
+    TerminalPanel *twindow;
     wxBoxSizer* breadcrumbs;
     wxBitmapButton* forward;
     wxBitmapButton* backward;
