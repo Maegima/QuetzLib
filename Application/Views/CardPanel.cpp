@@ -3,7 +3,7 @@
  * @author André Lucas Maegima
  * @brief CardPanel class implementation
  * @version 0.5
- * @date 2025-11-10
+ * @date 2025-11-11
  *
  * @copyright Copyright (c) 2025
  *
@@ -126,6 +126,7 @@ const std::string CardPanel::GetFileValue(const std::string expression) {
 }
 
 void CardPanel::OnLeftClick(wxMouseEvent &event) {
+    SetFocus();
     if (wxGetKeyState(WXK_CONTROL)) {
         SelectItem(!this->selected);
     } else if (wxGetKeyState(WXK_SHIFT)) {

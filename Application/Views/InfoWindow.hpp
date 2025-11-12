@@ -3,10 +3,10 @@
  * @file InfoWindow.hpp
  * @author André Lucas Maegima
  * @brief Information Window class definition
- * @version 0.4
- * @date 2024-04-07
+ * @version 0.5
+ * @date 2025-11-12
  *
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c) 2025
  *
  */
 
@@ -14,7 +14,6 @@
 #define _INFOWINDOW_HPP_
 
 #include <wx/wx.h>
-#include <wx/grid.h>
 #include <list>
 
 class InfoWindow : public wxPanel {

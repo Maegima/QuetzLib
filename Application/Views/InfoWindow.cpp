@@ -2,17 +2,17 @@
  * @file InfoWindow.cpp
  * @author André Lucas Maegima
  * @brief Information Window class implementation
- * @version 0.4
- * @date 2024-04-07
+ * @version 0.5
+ * @date 2025-11-12
  *
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c) 2025
  *
  */
 #include "InfoWindow.hpp"
-#include "wx/hyperlink.h"
+#include <wx/hyperlink.h>
 
 InfoWindow::InfoWindow(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
-    : wxPanel(parent, wxID_ANY, pos, size) {
+    : wxPanel(parent, wxID_ANY, pos, size, wxBORDER_SUNKEN) {
     SetBackgroundColour(*wxWHITE);
     SetSizer(new wxBoxSizer(wxVERTICAL));
 }

@@ -37,6 +37,7 @@ class MainWindow : public wxFrame {
 
    private:
     wxScrolledWindow* CreateListingPanel();
+    InfoWindow* CreateInfoPanel();
     wxBitmapButton* CreateBitmapButton(wxWindowID id, std::string name);
     wxBoxSizer* CreateSizer();
     wxButton* CreateBreadCrumbItem(wxString label, bool enabled = true);
@@ -45,8 +46,10 @@ class MainWindow : public wxFrame {
     void UpdatePathBreadCrumbs();
     void RefreshPath(bool reload = true);
     void RefreshStatusText();
+    const wxSize CalcSize(int min_height, int width);
 
-    void OnSize(wxSizeEvent& event);
+    void OnSizeLWindow(wxSizeEvent& event);
+    void OnSizeIWindow(wxSizeEvent& event);
     void OnFolderRightClick(wxMouseEvent& event);
     void OnKeyPress(wxKeyEvent& event);
     void OnBreadCrumbClick(wxCommandEvent& event);
