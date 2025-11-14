@@ -3,19 +3,15 @@
  * @author André Lucas Maegima
  * @brief Listing window implementation
  * @version 0.5
- * @date 2025-11-12
+ * @date 2025-11-13
  *
  * @copyright Copyright (c) 2025
  *
  */
 
 #include "Views/CardPanel.hpp"
-#include "wx/event.h"
-#include "wx/gdicmn.h"
 #include "wx/wrapsizer.h"
 #include "MainWindow.hpp"
-#include "Controllers/Process.hpp"
-#include <ostream>
 
 MainWindow::MainWindow()
 : wxFrame(nullptr, wxID_ANY, "Files", wxDefaultPosition, wxSize(1200, 800)),
@@ -186,8 +182,7 @@ void MainWindow::ExecuteMenuEvent(int eventId) {
     if (eventId & RUNNER_EVENT) {
         int runner_id = eventId & RUNNER_MASK;
         std::string runner = config.runners[runner_id].second;
-        std::cout << "runner " << runner_id << ": " << runner << std::endl;
-        Process::execute(runner, {runner, path}, twindow);
+        twindow->RunCommand(runner, {runner, path});
     }
 }
 

@@ -4,7 +4,7 @@
  * @author André Lucas Maegima
  * @brief
  * @version 0.5
- * @date 2025-11-11
+ * @date 2025-11-13
  *
  * @copyright Copyright (c) 2025
  *
@@ -32,9 +32,10 @@ class TerminalPanel : public wxTextCtrl {
 
   public:
     TerminalPanel(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size);
-    void WriteOut(const std::string &text);
-    void WriteErr(const std::string &text);
-    void Flush();
+    void WriteOut(wxThreadEvent &event);
+    void WriteErr(wxThreadEvent &event);
+    void FlushTrm(wxThreadEvent &event);
+    void RunCommand(const std::string &command, const std::vector<std::string> &args);
 };
 
 #endif // __TERMINALPANEL__

@@ -15,12 +15,10 @@ LIBS = #-lpthread -ldl -lm -llz4 -lzip -lsqlite3
 ##---------------------------------------------------------------------
 
 $(EXECUTABLE): $(OBJS)
-	@echo $(SOURCES)
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LIBS)
 
 $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(SRCDIR)/%.hpp
-	@echo $(SOURCES)
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 

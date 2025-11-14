@@ -1,16 +1,16 @@
 /**
  * @file Application.hpp
  * @author André Lucas Maegima
- * @brief Disklist Application definitions
- * @version 0.4
- * @date 2025-11-07
+ * @brief QuetzLib Application definitions
+ * @version 0.5
+ * @date 2025-11-12
  *
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c) 2025
  *
  */
 
-#ifndef DISKLIST_APPLICATION_HPP
-#define DISKLIST_APPLICATION_HPP
+#ifndef APPLICATION_HPP
+#define APPLICATION_HPP
 
 #include <wx/wx.h>
 
@@ -19,4 +19,4 @@ class Application : public wxApp {
     virtual bool OnInit();
 };
 
-#endif /* DISKLIST_APPLICATION_HPP */
+#endif /* APPLICATION_HPP */
