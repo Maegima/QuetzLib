@@ -181,8 +181,19 @@ void MainWindow::ExecuteMenuEvent(int eventId) {
     const std::filesystem::path path = selected_card->file.path;
     if (eventId & RUNNER_EVENT) {
         int runner_id = eventId & RUNNER_MASK;
-        std::string runner = config.runners[runner_id].second;
-        twindow->RunCommand(runner, {runner, path});
+        std::string runner = config.runners[runner_id].first;
+        std::string exec = config.runners[runner_id].second;
+        std::vector<std::string> args;
+        args.push_back(exec);
+        if(config.runners_args.contains(runner)) {
+            for(const auto &val : config.runners_args[runner]) {
+                if(val.first != "args")
+                    args.push_back(val.first);
+                args.push_back(selected_card->file.get_value(val.second));
+            }
+
+        }
+        twindow->RunCommand(exec, args);
     }
 }
 

@@ -14,6 +14,8 @@
 #include <sys/stat.h>
 #include "md5/md5.hpp"
 #include "FileInfo.hpp"
+#include "Algorithm.hpp"
+#include <regex>
 
 FileInfo::FileInfo(filesystem::directory_entry entry, bool with_hash){
     path = entry.path();
@@ -84,7 +86,7 @@ string FileInfo::md5sumString() const {
     return ss.str();
 }
 
-const std::string FileInfo::operator[](std::string idx) const {
+const std::string FileInfo::operator[](const std::string &idx) const {
     if(idx == "Name") return this->path.filename();
     if(idx == "Path") return this->path;
     if(idx == "Size") return this->size_str();
@@ -94,6 +96,29 @@ const std::string FileInfo::operator[](std::string idx) const {
     if(idx == "Type") return this->type_str();
     if(idx == "MD5SUM") return this->md5sumString();
     return "<null>";
+}
+
+const std::string FileInfo::get_value(const std::string &expression) const {
+    auto parts = Algorithm::split<std::vector>(expression, ',');
+    std::string value = expression;
+    if (parts.size() > 0 && parts[0].size() > 7 && parts[0].substr(0, 6) == "<file." && parts[0].back() == '>') {
+        value = (*this)[parts[0].substr(6, parts[0].size() - 7)];
+    }
+    if (parts.size() > 2) {
+        std::regex re(parts[1], std::regex::egrep);
+        std::string display = parts[2];
+        std::smatch match;
+        std::regex_search(value, match, re);
+        for (size_t i = 0; i < match.size(); i++) {
+            std::string needle = "(" + std::to_string(i) + ")";
+            size_t idx = display.find(needle);
+            if (idx != std::string::npos) {
+                display.replace(idx, needle.size(), match[i].str());
+            }
+        }
+        value = match.empty() ? "<null>" : display;
+    }
+    return value;
 }
 
 string FileInfo::to_string() const {

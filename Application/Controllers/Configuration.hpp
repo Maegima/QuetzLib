@@ -22,6 +22,7 @@ class Configuration {
    public:
     std::map<std::string, std::string> config;
     std::vector<std::pair<std::string, std::string>> runners;
+    std::map<std::string, std::vector<std::pair<std::string, std::string>>> runners_args;
     std::map<std::string, wxImage*> image;
     std::vector<std::string> image_extension;
     std::vector<std::pair<std::string, std::string>> file_info;

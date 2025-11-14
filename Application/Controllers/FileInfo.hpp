@@ -38,7 +38,8 @@ class FileInfo {
     std::string modified_str() const;
     std::string accessed_str() const;
     std::string type_str() const;
-    const std::string operator[](std::string idx) const;
+    const std::string operator[](const std::string &idx) const;
+    const std::string get_value(const std::string &expression) const;
 };
 
 std::ostream& operator<<(std::ostream& os, const FileInfo& file);

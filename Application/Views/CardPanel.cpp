@@ -11,9 +11,7 @@
 
 #include "CardPanel.hpp"
 #include "MainWindow.hpp"
-#include "Controllers/Algorithm.hpp"
 #include <wx/utils.h>
-#include <regex>
 #include <ranges>
 
 CardPanel::CardPanel(MainWindow *parent, std::filesystem::directory_entry entry)
@@ -102,29 +100,6 @@ std::pair<CardPanel::CardIterator, CardPanel::CardIterator> CardPanel::GetIterat
     return {first, second};
 }
 
-const std::string CardPanel::GetFileValue(const std::string expression) {
-    auto parts = Algorithm::split<std::vector>(expression, ',');
-    std::string value = "";
-    if (parts.size() > 0 && parts[0].size() > 7 && parts[0].substr(0, 6) == "<file." && parts[0].back() == '>') {
-        value = file[parts[0].substr(6, parts[0].size() - 7)];
-    }
-    if (parts.size() > 2) {
-        std::regex re(parts[1], std::regex::egrep);
-        std::string display = parts[2];
-        std::smatch match;
-        std::regex_search(value, match, re);
-        for (size_t i = 0; i < match.size(); i++) {
-            std::string needle = "(" + std::to_string(i) + ")";
-            size_t idx = display.find(needle);
-            if (idx != std::string::npos) {
-                display.replace(idx, needle.size(), match[i].str());
-            }
-        }
-        value = match.empty() ? "<null>" : display;
-    }
-    return value;
-}
-
 void CardPanel::OnLeftClick(wxMouseEvent &event) {
     SetFocus();
     if (wxGetKeyState(WXK_CONTROL)) {
@@ -190,7 +165,7 @@ void CardPanel::OnFolderLeftClick(wxMouseEvent &event) {
 void CardPanel::OnFileLeftClick(wxMouseEvent &event) {
     std::list<std::pair<wxString, wxString>> list;
     for (const auto &[key, expression] : parent->config.file_info) {
-        std::string value = GetFileValue(expression);
+        std::string value = file.get_value(expression);
         if (value != "<null>") {
             list.push_back({key, wxString::FromUTF8(value)});
         }

@@ -61,7 +61,6 @@ class CardPanel : public wxPanel {
     wxStaticText* CreateLabel(std::filesystem::directory_entry entry);
     Image* CreateImage(std::filesystem::directory_entry entry);
     std::pair<CardIterator, CardIterator> GetIterators(CardPanel* c1, CardPanel* c2);
-    const std::string GetFileValue(const std::string expression);
 };
 
 #endif  // _CARDPANEL_HPP_

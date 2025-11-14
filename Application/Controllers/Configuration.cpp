@@ -41,6 +41,8 @@ Configuration::Configuration(const std::string path) : file(std::fstream(path, s
                 }
             } else if (space == "fileinfo") {
                 file_info = items;
+            } else {
+                runners_args.insert({space, items});
             }
         }
     }
