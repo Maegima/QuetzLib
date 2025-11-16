@@ -3,13 +3,14 @@
  * @author André Lucas Maegima
  * @brief Listing window implementation
  * @version 0.5
- * @date 2025-11-13
+ * @date 2025-11-14
  *
  * @copyright Copyright (c) 2025
  *
  */
 
 #include "Views/CardPanel.hpp"
+#include "GamepadWindow.hpp"
 #include "wx/wrapsizer.h"
 #include "MainWindow.hpp"
 
@@ -270,9 +271,10 @@ void MainWindow::OnKeyPress(wxKeyEvent &event) {
                 break;
         }
     }
-    // if (uc >= WXK_F6 && uc <= WXK_F8) {
-    //     ExecuteMenuEvent(MOVE_TO_FOLDER + 1 + uc - WXK_F6);
-    // }
+    if(uc == WXK_F6) {
+        auto gw = new GamepadWindow(this);
+        gw->Show();
+    }
     event.Skip();
 }
 

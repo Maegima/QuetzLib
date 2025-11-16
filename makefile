@@ -8,7 +8,7 @@ OBJS=$(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 CXX = g++
 CXXFLAGS = -Wall -g -std=c++20 -I$(SRCDIR) `wx-config --cxxflags --libs` -O3
-LIBS = #-lpthread -ldl -lm -llz4 -lzip -lsqlite3
+LIBS = -lSDL3 #-lpthread -ldl -lm -llz4 -lzip -lsqlite3
 
 ##---------------------------------------------------------------------
 ## BUILD RULES
