@@ -19,12 +19,12 @@ class Gamepad {
   public:
     SDL_JoystickID id;
     std::vector<int> hats;
+    std::vector<int> axes;
     std::vector<int> buttons;
     SDL_Gamepad *gamepad;
     SDL_Joystick *joystick;
     Gamepad(SDL_JoystickID id);
     ~Gamepad();
-
 };
 
 #endif // __GAMEPAD__

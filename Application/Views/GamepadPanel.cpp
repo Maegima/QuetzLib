@@ -7,18 +7,25 @@ GamepadPanel::GamepadPanel(wxWindow *parent, SDL_JoystickID id) : wxPanel(parent
     wxStaticBoxSizer *thirdSection = new wxStaticBoxSizer(wxVERTICAL, this, "&Section3");
 
     auto fst_box = firstSection->GetStaticBox();
-    for(auto &hat : controller.hats) {
+    for (auto &hat : controller.hats) {
         auto bt = new wxToggleButton(fst_box, wxID_ANY, "hat");
         hats.push_back(bt);
         firstSection->Add(bt, 0, wxALL | wxEXPAND, 1);
-        hat = hats.size()-1;
+        hat = hats.size() - 1;
     }
     auto snd_box = secondSection->GetStaticBox();
-    for(auto &btt : controller.buttons) {
+    for (auto &btt : controller.buttons) {
         auto bt = new wxToggleButton(snd_box, wxID_ANY, "button");
         buttons.push_back(bt);
         secondSection->Add(bt, 0, wxALL | wxEXPAND, 1);
-        btt = buttons.size()-1;
+        btt = buttons.size() - 1;
+    }
+    auto trd_box = thirdSection->GetStaticBox();
+    for (auto &axs : controller.axes) {
+        auto bt = new AxisDisplayPanel(trd_box);
+        axes.push_back(bt);
+        thirdSection->Add(bt, 0, wxALL | wxEXPAND, 1);
+        axs = axes.size() - 1;
     }
     wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
     sizer->Add(firstSection, 1, wxALL | wxEXPAND, 10);
@@ -31,6 +38,6 @@ SDL_JoystickID GamepadPanel::Id() {
     return controller.id;
 }
 
-SDL_Gamepad* GamepadPanel::GetGamepad() {
+SDL_Gamepad *GamepadPanel::GetGamepad() {
     return controller.gamepad;
 }

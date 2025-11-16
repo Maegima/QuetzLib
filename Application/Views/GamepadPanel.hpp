@@ -15,18 +15,20 @@
 #include <wx/wx.h>
 #include <wx/tglbtn.h>
 #include "Models/Gamepad.hpp"
+#include "AxisDisplayPanel.hpp"
 
 class GamepadPanel : public wxPanel {
   private:
     Gamepad controller;
 
   public:
-    std::vector<wxToggleButton*> hats;
-    std::vector<wxToggleButton*> buttons;
+    std::vector<wxToggleButton *> hats;
+    std::vector<wxToggleButton *> buttons;
+    std::vector<AxisDisplayPanel *> axes;
 
     GamepadPanel(wxWindow *parent, SDL_JoystickID id);
     SDL_JoystickID Id();
-    SDL_Gamepad* GetGamepad();
+    SDL_Gamepad *GetGamepad();
 };
 
 #endif // __GAMEPADPANEL__

@@ -15,7 +15,7 @@ GamepadWindow::GamepadWindow(wxWindow *parent)
                 auto gp = new GamepadPanel(this, ids[i]);
                 controllers.insert({ids[i], gp});
                 sizer->Add(gp, 0, wxEXPAND | wxALL, 0);
-            } catch(std::ios_base::failure &e) {
+            } catch (std::ios_base::failure &e) {
                 wxLogError("Failed to open Gamepad %u: %s", ids[i], e.what());
             }
         }
@@ -38,11 +38,11 @@ GamepadWindow::~GamepadWindow() {
 void GamepadWindow::ReadInputs(wxTimerEvent &event) {
     SDL_Event ctrl_event;
     while (SDL_PollEvent(&ctrl_event)) {
-        if(ctrl_event.type == SDL_EVENT_QUIT) {
+        if (ctrl_event.type == SDL_EVENT_QUIT) {
             input_timer.Stop();
             parent->Close();
-        } else if(ctrl_event.type == SDL_EVENT_GAMEPAD_ADDED) {
-            if(!controllers.contains(ctrl_event.gdevice.which)) {
+        } else if (ctrl_event.type == SDL_EVENT_GAMEPAD_ADDED) {
+            if (!controllers.contains(ctrl_event.gdevice.which)) {
                 auto gp = new GamepadPanel(this, ctrl_event.gdevice.which);
                 GetSizer()->Add(gp, 0, wxEXPAND | wxALL, 0);
                 GetSizer()->Layout();
@@ -55,19 +55,34 @@ void GamepadWindow::ReadInputs(wxTimerEvent &event) {
         if (controllers.contains(id)) {
             auto gp = controllers[id];
             Uint8 bt;
+            int16_t axis, pos;
+            Uint8 xid, xid_other;
             switch (ctrl_event.type) {
             case SDL_EVENT_JOYSTICK_BUTTON_UP:
             case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
                 bt = ctrl_event.jbutton.button;
-                if(bt < gp->buttons.size()) {
+                if (bt < gp->buttons.size()) {
                     gp->buttons[bt]->SetValue(SDL_EVENT_JOYSTICK_BUTTON_DOWN == ctrl_event.type);
                 }
                 break;
 
             case SDL_EVENT_JOYSTICK_HAT_MOTION:
                 bt = ctrl_event.jhat.value;
-                for(uint i = 0; i < gp->hats.size(); i++) {
+                for (uint i = 0; i < gp->hats.size(); i++) {
                     gp->hats[i]->SetValue((bt >> i) & 1);
+                }
+                break;
+
+            case SDL_EVENT_JOYSTICK_AXIS_MOTION:
+                axis = ctrl_event.jaxis.value;
+                std::cout << (int)ctrl_event.jaxis.axis << " " << axis << "\n";
+                xid = ctrl_event.jaxis.axis;
+                xid_other = xid % 2 == 0 ? xid + 1 : xid - 1;
+                pos = SDL_GetJoystickAxis(SDL_GetJoystickFromID(id), xid_other);
+                if (xid % 2 == 0) {
+                    gp->axes[xid / 2]->UpdatePosition(axis, pos);
+                } else {
+                    gp->axes[xid / 2]->UpdatePosition(pos, axis);
                 }
                 break;
 
