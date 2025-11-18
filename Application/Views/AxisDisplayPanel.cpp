@@ -9,6 +9,7 @@ AxisDisplayPanel::AxisDisplayPanel(wxWindow *parent, int axes, int x_axis, int y
     AxisPanel->Bind(wxEVT_PAINT, &AxisDisplayPanel::OnPaint, this);
     AxisPanel->Bind(wxEVT_SIZE, &AxisDisplayPanel::OnSize, this);
     AxisPanel->Bind(wxEVT_KEY_DOWN, &AxisDisplayPanel::OnKeyPress, this);
+    Bind(wxEVT_CHOICE, &AxisDisplayPanel::OnChangeType, this, TYPE_CHANGE);
 
     wxArrayString choices;
     choices.Alloc(axes);
@@ -22,16 +23,29 @@ AxisDisplayPanel::AxisDisplayPanel(wxWindow *parent, int axes, int x_axis, int y
     snd_axis = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, choices);
     snd_axis->SetSelection(y_axis);
     choiceSizer->Add(snd_axis, 1, wxEXPAND, 0);
+    sel_type = new wxChoice(this, TYPE_CHANGE, wxDefaultPosition, wxDefaultSize, {"stick", "trigger"});
+    sel_type->SetSelection(0);
+    choiceSizer->Add(sel_type, 1, wxEXPAND, 0);
+
+    TriggerX = new TriggerPanel(this, true);
+    TriggerX->Hide();
+
+    TriggerY = new TriggerPanel(this, true);
+    TriggerY->Hide();
 
     auto sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(choiceSizer, 0, wxALL | wxEXPAND, 1);
     sizer->Add(AxisPanel, 0, wxALL | wxEXPAND, 1);
+    sizer->Add(TriggerX, 0, wxALL | wxEXPAND, 1);
+    sizer->Add(TriggerY, 0, wxALL | wxEXPAND, 1);
     SetSizer(sizer);
 }
 
 void AxisDisplayPanel::UpdatePosition(int x, int y) {
     pos_x = x;
     pos_y = y;
+    TriggerX->SetValue(x);
+    TriggerY->SetValue(y);
     Refresh();
 }
 void AxisDisplayPanel::OnPaint(wxPaintEvent &event) {
@@ -68,4 +82,23 @@ void AxisDisplayPanel::OnKeyPress(wxKeyEvent &event) {
         AxisPanel->SetBackgroundColour(wxSystemSettings::GetColour((wxSystemColour)color));
     }
     AxisPanel->Refresh();
+}
+
+void AxisDisplayPanel::OnChangeType(wxCommandEvent &event) {
+    long sel = event.GetSelection();
+    if(sel == 0) {
+        AxisPanel->Show();
+        TriggerY->Hide();
+        TriggerX->Hide();
+    } else {
+        TriggerX->Show();
+        TriggerY->Show();
+        AxisPanel->Hide();
+    }
+    auto sizer = GetSizer();
+    sizer->Layout();
+    auto conSizer = GetContainingSizer();
+    if(conSizer) {
+        conSizer->Layout();
+    }
 }
