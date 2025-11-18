@@ -17,16 +17,21 @@
 class AxisDisplayPanel : public wxPanel {
   public:
     void last();
-    AxisDisplayPanel(wxWindow *parent);
+    AxisDisplayPanel(wxWindow *parent, int axes, int x_axis = 0, int y_axis = 1);
     void UpdatePosition(int x, int y);
+    wxChoice *fst_axis;
+    wxChoice *snd_axis;
+    int pos_x;
+    int pos_y;
 
   private:
+    int color = 0;
+    wxPanel *AxisPanel;
     void OnPaint(wxPaintEvent &event);
     void OnSize(wxSizeEvent &event);
     void OnKeyPress(wxKeyEvent &event);
-    int pos_x = 0;
-    int pos_y = 0;
-    int color = 0;
+    int GetX();
+    int GetY();
 };
 
 #endif //__AXISDISPLAYPANEL__

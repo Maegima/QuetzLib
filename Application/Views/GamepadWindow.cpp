@@ -55,8 +55,8 @@ void GamepadWindow::ReadInputs(wxTimerEvent &event) {
         if (controllers.contains(id)) {
             auto gp = controllers[id];
             Uint8 bt;
-            int16_t axis, pos;
-            Uint8 xid, xid_other;
+            int16_t axis;
+            Uint8 xid;
             switch (ctrl_event.type) {
             case SDL_EVENT_JOYSTICK_BUTTON_UP:
             case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
@@ -75,14 +75,18 @@ void GamepadWindow::ReadInputs(wxTimerEvent &event) {
 
             case SDL_EVENT_JOYSTICK_AXIS_MOTION:
                 axis = ctrl_event.jaxis.value;
-                std::cout << (int)ctrl_event.jaxis.axis << " " << axis << "\n";
                 xid = ctrl_event.jaxis.axis;
-                xid_other = xid % 2 == 0 ? xid + 1 : xid - 1;
-                pos = SDL_GetJoystickAxis(SDL_GetJoystickFromID(id), xid_other);
-                if (xid % 2 == 0) {
-                    gp->axes[xid / 2]->UpdatePosition(axis, pos);
-                } else {
-                    gp->axes[xid / 2]->UpdatePosition(pos, axis);
+                for(auto xp : gp->axes) {
+                    auto fsel = xp->fst_axis->GetSelection();
+                    auto ssel = xp->snd_axis->GetSelection();
+                    if(fsel == xid) {
+                        auto pos = ssel > -1 ? SDL_GetJoystickAxis(SDL_GetJoystickFromID(id), ssel) : 0;
+                        xp->UpdatePosition(axis, pos);
+                    }
+                    if(ssel == xid) {
+                        auto pos = fsel > -1 ? SDL_GetJoystickAxis(SDL_GetJoystickFromID(id), fsel) : 0;
+                        xp->UpdatePosition(pos, axis);
+                    }
                 }
                 break;
 

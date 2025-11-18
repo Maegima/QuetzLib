@@ -21,11 +21,12 @@ GamepadPanel::GamepadPanel(wxWindow *parent, SDL_JoystickID id) : wxPanel(parent
         btt = buttons.size() - 1;
     }
     auto trd_box = thirdSection->GetStaticBox();
-    for (auto &axs : controller.axes) {
-        auto bt = new AxisDisplayPanel(trd_box);
+    for (uint i = 0; i < controller.axes.size()/2; i++) {
+        auto bt = new AxisDisplayPanel(trd_box, controller.axes.size(), 2*axes.size(), 2*axes.size()+1);
         axes.push_back(bt);
         thirdSection->Add(bt, 0, wxALL | wxEXPAND, 1);
-        axs = axes.size() - 1;
+        controller.axes[i] = 2*axes.size() - 1;
+        controller.axes[i+1] = 2*axes.size();
     }
     wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
     sizer->Add(firstSection, 1, wxALL | wxEXPAND, 10);

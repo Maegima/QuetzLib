@@ -1,13 +1,32 @@
 #include "AxisDisplayPanel.hpp"
 #include <wx/dcbuffer.h>
 
-AxisDisplayPanel::AxisDisplayPanel(wxWindow *parent)
-: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(80, 80), wxBORDER_SUNKEN) {
-    SetBackgroundStyle(wxBG_STYLE_PAINT); // Indicate the control is user-painted
-    SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR));
-    Bind(wxEVT_PAINT, &AxisDisplayPanel::OnPaint, this);
-    Bind(wxEVT_SIZE, &AxisDisplayPanel::OnSize, this);
-    Bind(wxEVT_KEY_DOWN, &AxisDisplayPanel::OnKeyPress, this);
+AxisDisplayPanel::AxisDisplayPanel(wxWindow *parent, int axes, int x_axis, int y_axis)
+: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SUNKEN) {
+    AxisPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(80, 80));
+    AxisPanel->SetBackgroundStyle(wxBG_STYLE_PAINT); // Indicate the control is user-painted
+    AxisPanel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR));
+    AxisPanel->Bind(wxEVT_PAINT, &AxisDisplayPanel::OnPaint, this);
+    AxisPanel->Bind(wxEVT_SIZE, &AxisDisplayPanel::OnSize, this);
+    AxisPanel->Bind(wxEVT_KEY_DOWN, &AxisDisplayPanel::OnKeyPress, this);
+
+    wxArrayString choices;
+    choices.Alloc(axes);
+    for(int i = 0; i < axes; i++) {
+        choices.Add("axis " + std::to_string(i+1));
+    }
+    auto choiceSizer = new wxBoxSizer(wxHORIZONTAL);
+    fst_axis = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, choices);
+    fst_axis->SetSelection(x_axis);
+    choiceSizer->Add(fst_axis, 1, wxEXPAND, 0);
+    snd_axis = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, choices);
+    snd_axis->SetSelection(y_axis);
+    choiceSizer->Add(snd_axis, 1, wxEXPAND, 0);
+
+    auto sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(choiceSizer, 0, wxALL | wxEXPAND, 1);
+    sizer->Add(AxisPanel, 0, wxALL | wxEXPAND, 1);
+    SetSizer(sizer);
 }
 
 void AxisDisplayPanel::UpdatePosition(int x, int y) {
@@ -16,10 +35,10 @@ void AxisDisplayPanel::UpdatePosition(int x, int y) {
     Refresh();
 }
 void AxisDisplayPanel::OnPaint(wxPaintEvent &event) {
-    wxAutoBufferedPaintDC dc(this);
+    wxAutoBufferedPaintDC dc(AxisPanel);
     dc.Clear();
 
-    wxSize size = GetClientSize();
+    wxSize size = AxisPanel->GetClientSize();
     int centerX = size.GetX() / 2;
     int centerY = size.GetY() / 2;
     int radius = std::min(centerX, centerY) - 10;
@@ -30,25 +49,23 @@ void AxisDisplayPanel::OnPaint(wxPaintEvent &event) {
 
     int innerX = centerX + (int)((double)pos_x * radius / 32768.0);
     int innerY = centerY + (int)((double)pos_y * radius / 32768.0);
-    printf("inner %d %d ref %d %d\n", innerX, innerY, pos_x, pos_y);
     dc.SetBrush(*wxBLUE_BRUSH);
     dc.DrawCircle(innerX, innerY, 10);
 }
 
 void AxisDisplayPanel::OnSize(wxSizeEvent &event) {
-    Refresh();
+    AxisPanel->Refresh();
     event.Skip();
 }
 
 void AxisDisplayPanel::OnKeyPress(wxKeyEvent &event) {
     if (event.GetKeyCode() == WXK_LEFT) {
         color = (color + 1) % wxSYS_COLOUR_MAX;
-        SetBackgroundColour(wxSystemSettings::GetColour((wxSystemColour)color));
+        AxisPanel->SetBackgroundColour(wxSystemSettings::GetColour((wxSystemColour)color));
     }
     if (event.GetKeyCode() == WXK_RIGHT) {
         color = (color + wxSYS_COLOUR_MAX - 1) % wxSYS_COLOUR_MAX;
-        SetBackgroundColour(wxSystemSettings::GetColour((wxSystemColour)color));
+        AxisPanel->SetBackgroundColour(wxSystemSettings::GetColour((wxSystemColour)color));
     }
-    std::cout << color << "\n";
-    Refresh();
+    AxisPanel->Refresh();
 }

@@ -12,7 +12,7 @@ Gamepad::Gamepad(SDL_JoystickID id) {
     hats.resize(size * 4, -1);
     size = SDL_GetNumJoystickAxes(joystick);
     if (size == -1) throw new std::ios_base::failure(SDL_GetError());
-    axes.resize(size / 2, -1);
+    axes.resize(size, -1);
     size = SDL_GetNumJoystickButtons(joystick);
     if (size == -1) throw new std::ios_base::failure(SDL_GetError());
     buttons.resize(size, -1);
