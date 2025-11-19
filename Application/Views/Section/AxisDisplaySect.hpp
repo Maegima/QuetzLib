@@ -12,8 +12,8 @@
 #ifndef __AXISDISPLAYSECT__
 #define __AXISDISPLAYSECT__
 
-#include <wx/wx.h>
 #include "Views/Control/TriggerCtrl.hpp"
+#include "Views/Control/StickCtrl.hpp"
 
 class AxisDisplaySect : public wxPanel {
   public:
@@ -22,17 +22,11 @@ class AxisDisplaySect : public wxPanel {
     wxChoice *fst_axis;
     wxChoice *snd_axis;
     wxChoice *sel_type;
-    int pos_x;
-    int pos_y;
 
   private:
-    int color = 0;
-    wxPanel *AxisPanel;
+    StickCtrl *Stick;
     TriggerCtrl *TriggerX;
     TriggerCtrl *TriggerY;
-    void OnPaint(wxPaintEvent &event);
-    void OnSize(wxSizeEvent &event);
-    void OnKeyPress(wxKeyEvent &event);
     void OnChangeType(wxCommandEvent &event);
 
     enum EVENT {

@@ -1,54 +1,13 @@
 #include "TriggerCtrl.hpp"
-#include <wx/dcbuffer.h>
 
 TriggerCtrl::TriggerCtrl(wxWindow *parent, bool bidirectional)
-: wxControl(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 30), wxBORDER_SUNKEN | wxWANTS_CHARS),
-  bidirectional(bidirectional) {
-    SetBackgroundStyle(wxBG_STYLE_PAINT);
-    Bind(wxEVT_PAINT, &TriggerCtrl::OnPaint, this);
-    Bind(wxEVT_SIZE, &TriggerCtrl::OnSize, this);
-}
-
-void TriggerCtrl::SetValue(int val) {
-    if (val >= min_value && val <= max_value && val != value) {
-        value = val;
-        Refresh();
-    }
-}
-
-int TriggerCtrl::GetValue() {
-    return value;
-}
-
-void TriggerCtrl::SetRange(int min, int max) {
-    min_value = min;
-    max_value = max;
-    if (min_value > value) value = min;
-    if (max_value < value) value = max;
-    Refresh();
-}
-
-void TriggerCtrl::SetDeadZone(int val) {
-    if (dead_zone != val) {
-        dead_zone = std::abs(val);
-        Refresh();
-    }
-}
-
-void TriggerCtrl::OnPaint(wxPaintEvent &event) {
-    wxAutoBufferedPaintDC dc(this);
-    Draw(dc);
-}
-
-void TriggerCtrl::OnSize(wxSizeEvent &event) {
-    Refresh();
-    event.Skip();
-}
+: AxisCtrl(parent, wxSize(-1, 30)), bidirectional(bidirectional) {}
 
 void TriggerCtrl::Draw(wxDC &dc) {
     wxSize size = GetClientSize();
     int width = size.GetWidth();
     int height = size.GetHeight();
+    int value = GetX();
 
     dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
     dc.Clear();
@@ -91,7 +50,7 @@ void TriggerCtrl::DrawDeadZone(wxDC &dc, int progressX, int width, int height) {
     int deadZoneStartX = width * double(-dead_zone - min_value) / range;
     int deadZoneEndX = width * double(dead_zone - min_value) / range;
     int deadZoneWidth = deadZoneEndX - deadZoneStartX;
-    if(!bidirectional) {
+    if (!bidirectional) {
         deadZoneStartX = 0;
         deadZoneEndX = deadZoneWidth;
     }
@@ -114,17 +73,17 @@ void TriggerCtrl::DrawDeadZone(wxDC &dc, int progressX, int width, int height) {
     dc.DrawRectangle(deadZoneEndX, 0, height, height);
 
     dc.SetPen(*wxBLACK_PEN);
-    if(!bidirectional) {
-        if(progressX > deadZoneEndX) {
+    if (!bidirectional) {
+        if (progressX > deadZoneEndX) {
             dc.SetBrush(*wxGREY_BRUSH);
             dc.DrawRectangle(deadZoneEndX, 0, progressX - deadZoneEndX, height);
         }
-    } else if(progressX < deadZoneStartX) {
+    } else if (progressX < deadZoneStartX) {
         dc.SetBrush(*wxRED_BRUSH);
-        dc.DrawRectangle(deadZoneStartX, 0, -(deadZoneStartX-progressX)+1, height);
-    } else if(progressX > deadZoneEndX) {
+        dc.DrawRectangle(deadZoneStartX, 0, -(deadZoneStartX - progressX) + 1, height);
+    } else if (progressX > deadZoneEndX) {
         dc.SetBrush(*wxBLUE_BRUSH);
-        dc.DrawRectangle(deadZoneEndX, 0, progressX-deadZoneEndX, height);
+        dc.DrawRectangle(deadZoneEndX, 0, progressX - deadZoneEndX, height);
     }
 
     dc.SetPen(hatchPen);

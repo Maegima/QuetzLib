@@ -3,7 +3,7 @@
  * @author André Lucas Maegima
  * @brief
  * @version 0.5
- * @date 2025-11-18
+ * @date 2025-11-19
  *
  * @copyright Copyright (c) 2025
  *
@@ -12,25 +12,20 @@
 #ifndef __TRIGGERCTRL__
 #define __TRIGGERCTRL__
 
-#include <wx/wx.h>
+#include "Views/Control/AxisCtrl.hpp"
+#include <cstdint>
 
-class TriggerCtrl : public wxControl {
+class TriggerCtrl : public AxisCtrl {
   public:
     TriggerCtrl(wxWindow *parent, bool bidirectional);
-    void SetValue(int val);
-    int GetValue();
-    void SetRange(int min, int max);
-    void SetDeadZone(int val);
+    void SetValue(uint16_t val){ SetX(val); }
 
   private:
-    int value = 0;
-    int min_value = -32768;
-    int max_value = 32767;
-    int dead_zone = max_value/4;
+    static const int16_t min_value = INT16_MIN;
+    static const int16_t max_value = INT16_MAX;
+    int dead_zone = (max_value-min_value)/8;
     bool bidirectional;
 
-    void OnPaint(wxPaintEvent &event);
-    void OnSize(wxSizeEvent &event);
     void Draw(wxDC &dc);
     void DrawDeadZone(wxDC &dc, int progressX, int width, int height);
 };

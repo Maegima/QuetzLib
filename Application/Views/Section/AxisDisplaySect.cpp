@@ -3,12 +3,6 @@
 
 AxisDisplaySect::AxisDisplaySect(wxWindow *parent, int axes, int x_axis, int y_axis)
 : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SUNKEN) {
-    AxisPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(80, 80));
-    AxisPanel->SetBackgroundStyle(wxBG_STYLE_PAINT); // Indicate the control is user-painted
-    AxisPanel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR));
-    AxisPanel->Bind(wxEVT_PAINT, &AxisDisplaySect::OnPaint, this);
-    AxisPanel->Bind(wxEVT_SIZE, &AxisDisplaySect::OnSize, this);
-    AxisPanel->Bind(wxEVT_KEY_DOWN, &AxisDisplaySect::OnKeyPress, this);
     Bind(wxEVT_CHOICE, &AxisDisplaySect::OnChangeType, this, TYPE_CHANGE);
 
     wxArrayString choices;
@@ -27,6 +21,8 @@ AxisDisplaySect::AxisDisplaySect(wxWindow *parent, int axes, int x_axis, int y_a
     sel_type->SetSelection(0);
     choiceSizer->Add(sel_type, 1, wxEXPAND, 0);
 
+    Stick = new StickCtrl(this);
+
     TriggerX = new TriggerCtrl(this, true);
     TriggerX->Hide();
 
@@ -35,65 +31,29 @@ AxisDisplaySect::AxisDisplaySect(wxWindow *parent, int axes, int x_axis, int y_a
 
     auto sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(choiceSizer, 0, wxALL | wxEXPAND, 1);
-    sizer->Add(AxisPanel, 0, wxALL | wxEXPAND, 1);
+    sizer->Add(Stick, 0, wxALL | wxEXPAND, 1);
     sizer->Add(TriggerX, 0, wxALL | wxEXPAND, 1);
     sizer->Add(TriggerY, 0, wxALL | wxEXPAND, 1);
     SetSizer(sizer);
 }
 
 void AxisDisplaySect::UpdatePosition(int x, int y) {
-    pos_x = x;
-    pos_y = y;
+    Stick->UpdatePosition(x, y);
     TriggerX->SetValue(x);
     TriggerY->SetValue(y);
     Refresh();
-}
-void AxisDisplaySect::OnPaint(wxPaintEvent &event) {
-    wxAutoBufferedPaintDC dc(AxisPanel);
-    dc.Clear();
-
-    wxSize size = AxisPanel->GetClientSize();
-    int centerX = size.GetX() / 2;
-    int centerY = size.GetY() / 2;
-    int radius = std::min(centerX, centerY) - 10;
-
-    dc.SetBrush(*wxTRANSPARENT_BRUSH);
-    dc.SetPen(*wxBLACK_PEN);
-    dc.DrawCircle(centerX, centerY, radius);
-
-    int innerX = centerX + (int)((double)pos_x * radius / 32768.0);
-    int innerY = centerY + (int)((double)pos_y * radius / 32768.0);
-    dc.SetBrush(*wxBLUE_BRUSH);
-    dc.DrawCircle(innerX, innerY, 10);
-}
-
-void AxisDisplaySect::OnSize(wxSizeEvent &event) {
-    AxisPanel->Refresh();
-    event.Skip();
-}
-
-void AxisDisplaySect::OnKeyPress(wxKeyEvent &event) {
-    if (event.GetKeyCode() == WXK_LEFT) {
-        color = (color + 1) % wxSYS_COLOUR_MAX;
-        AxisPanel->SetBackgroundColour(wxSystemSettings::GetColour((wxSystemColour)color));
-    }
-    if (event.GetKeyCode() == WXK_RIGHT) {
-        color = (color + wxSYS_COLOUR_MAX - 1) % wxSYS_COLOUR_MAX;
-        AxisPanel->SetBackgroundColour(wxSystemSettings::GetColour((wxSystemColour)color));
-    }
-    AxisPanel->Refresh();
 }
 
 void AxisDisplaySect::OnChangeType(wxCommandEvent &event) {
     long sel = event.GetSelection();
     if(sel == 0) {
-        AxisPanel->Show();
+        Stick->Show();
         TriggerY->Hide();
         TriggerX->Hide();
     } else {
         TriggerX->Show();
         TriggerY->Show();
-        AxisPanel->Hide();
+        Stick->Hide();
     }
     auto sizer = GetSizer();
     sizer->Layout();
