@@ -15,7 +15,7 @@
 #include <wx/wx.h>
 #include <wx/timer.h>
 #include <wx/tglbtn.h>
-#include "GamepadSect.hpp"
+#include "Views/Section/GamepadSect.hpp"
 #include <map>
 
 class GamepadWind : public wxFrame {

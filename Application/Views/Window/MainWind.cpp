@@ -9,8 +9,7 @@
  *
  */
 
-#include "CardCtrl.hpp"
-#include "GamepadWind.hpp"
+#include "Views/Window/GamepadWind.hpp"
 #include "wx/wrapsizer.h"
 #include "MainWind.hpp"
 

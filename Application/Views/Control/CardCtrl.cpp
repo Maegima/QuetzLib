@@ -10,7 +10,7 @@
  */
 
 #include "CardCtrl.hpp"
-#include "MainWind.hpp"
+#include "Views/Window/MainWind.hpp"
 #include <wx/utils.h>
 #include <ranges>
 

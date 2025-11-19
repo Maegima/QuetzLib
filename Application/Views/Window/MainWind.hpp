@@ -3,12 +3,12 @@
 
 #include <wx/wx.h>
 #include <wx/sizer.h>
-#include "CardCtrl.hpp"
-#include "FileInfoSect.hpp"
+#include "Views/Control/CardCtrl.hpp"
+#include "Views/Section/FileInfoSect.hpp"
 #include <filesystem>
 #include <list>
 #include "Controllers/Configuration.hpp"
-#include "Views/TerminalSect.hpp"
+#include "Views/Section/TerminalSect.hpp"
 
 class MainWind : public wxFrame {
    public:

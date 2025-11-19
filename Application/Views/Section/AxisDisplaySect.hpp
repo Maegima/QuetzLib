@@ -13,7 +13,7 @@
 #define __AXISDISPLAYSECT__
 
 #include <wx/wx.h>
-#include "TriggerCtrl.hpp"
+#include "Views/Control/TriggerCtrl.hpp"
 
 class AxisDisplaySect : public wxPanel {
   public:

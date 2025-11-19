@@ -10,7 +10,7 @@
  */
 
 #include "Application.hpp"
-#include "Views/MainWind.hpp"
+#include "Views/Window/MainWind.hpp"
 
 bool Application::OnInit() {
     wxLog::SetActiveTarget(new wxLogStderr());

@@ -15,7 +15,7 @@
 #include <wx/wx.h>
 #include <wx/tglbtn.h>
 #include "Models/Gamepad.hpp"
-#include "AxisDisplaySect.hpp"
+#include "Views/Section/AxisDisplaySect.hpp"
 
 class GamepadSect : public wxPanel {
   private:
