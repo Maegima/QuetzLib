@@ -1,7 +1,7 @@
 /**
- * @file CardPanel.hpp
+ * @file CardCtrl.hpp
  * @author André Lucas Maegima
- * @brief CardPanel class definition
+ * @brief CardCtrl class definition
  * @version 0.5
  * @date 2025-11-10
  *
@@ -9,15 +9,15 @@
  *
  */
 
-#ifndef _CARDPANEL_HPP_
-#define _CARDPANEL_HPP_
+#ifndef __CARDCTRL__
+#define __CARDCTRL__
 
 #include <wx/wx.h>
 #include <list>
 #include "Controllers/Image.hpp"
 #include "Controllers/FileInfo.hpp"
 
-class MainWindow;
+class MainWind;
 
 enum {
     RUNNER_MASK = 0x7FF,
@@ -25,9 +25,9 @@ enum {
     FIRST_EVENT = 0x1000
 };
 
-class CardPanel : public wxPanel {
+class CardCtrl : public wxPanel {
    public:
-    MainWindow* parent;
+    MainWind* parent;
     FileInfo file;
     std::string name;
     Image* image;
@@ -36,8 +36,8 @@ class CardPanel : public wxPanel {
     bool selected;
     bool to_remove;
 
-    CardPanel(MainWindow* parent, std::filesystem::directory_entry entry);
-    ~CardPanel();
+    CardCtrl(MainWind* parent, std::filesystem::directory_entry entry);
+    ~CardCtrl();
 
     void OnFolderLeftClick(wxMouseEvent& event);
     void OnFileLeftClick(wxMouseEvent& event);
@@ -51,16 +51,16 @@ class CardPanel : public wxPanel {
     void SkipMouseEvent(wxMouseEvent &event);
 
     struct CompareCards {
-        bool operator()(const CardPanel* c1, const CardPanel* c2) const;
+        bool operator()(const CardCtrl* c1, const CardCtrl* c2) const;
     };
 
-    typedef std::list<CardPanel *>::iterator CardIterator;
+    typedef std::list<CardCtrl *>::iterator CardIterator;
 
     void SelectItem(bool select, bool highlight = true);
    private:
     wxStaticText* CreateLabel(std::filesystem::directory_entry entry);
     Image* CreateImage(std::filesystem::directory_entry entry);
-    std::pair<CardIterator, CardIterator> GetIterators(CardPanel* c1, CardPanel* c2);
+    std::pair<CardIterator, CardIterator> GetIterators(CardCtrl* c1, CardCtrl* c2);
 };
 
-#endif  // _CARDPANEL_HPP_
+#endif  // __CARDCTRL__

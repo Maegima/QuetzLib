@@ -1,5 +1,5 @@
 /**
- * @file MainWindow.cpp
+ * @file MainWind.cpp
  * @author André Lucas Maegima
  * @brief Listing window implementation
  * @version 0.5
@@ -9,25 +9,25 @@
  *
  */
 
-#include "Views/CardPanel.hpp"
-#include "GamepadWindow.hpp"
+#include "CardCtrl.hpp"
+#include "GamepadWind.hpp"
 #include "wx/wrapsizer.h"
-#include "MainWindow.hpp"
+#include "MainWind.hpp"
 
-MainWindow::MainWindow()
+MainWind::MainWind()
 : wxFrame(nullptr, wxID_ANY, "Files", wxDefaultPosition, wxSize(1200, 800)),
   config(".conf"),
   lwindow(CreateListingPanel()),
   iwindow(CreateInfoPanel()),
-  twindow(new TerminalPanel(this, wxID_ANY, wxPoint(0, 600), wxSize(1200, 200))),
+  twindow(new TerminalSect(this, wxID_ANY, wxPoint(0, 600), wxSize(1200, 200))),
   breadcrumbs(new wxBoxSizer(wxHORIZONTAL)),
   forward(CreateBitmapButton(wxID_FORWARD, "forward")),
   backward(CreateBitmapButton(wxID_BACKWARD, "backward")),
   selected_folders(0),
   selected_files(0),
   selected_card(nullptr) {
-    forward->Bind(wxEVT_BUTTON, &MainWindow::OnForward, this);
-    backward->Bind(wxEVT_BUTTON, &MainWindow::OnBackward, this);
+    forward->Bind(wxEVT_BUTTON, &MainWind::OnForward, this);
+    backward->Bind(wxEVT_BUTTON, &MainWind::OnBackward, this);
 
     SetSizer(CreateSizer());
     CreateStatusBar();
@@ -35,15 +35,15 @@ MainWindow::MainWindow()
     ChangePath(config.config["root"]);
 }
 
-wxScrolledWindow *MainWindow::CreateListingPanel() {
+wxScrolledWindow *MainWind::CreateListingPanel() {
     wxScrolledWindow *window = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER);
     window->SetBackgroundColour(*wxWHITE);
-    window->Bind(wxEVT_SIZE, &MainWindow::OnSizeLWindow, this, wxID_ANY);
-    window->Bind(wxEVT_RIGHT_DOWN, &MainWindow::OnFolderRightClick, this, wxID_ANY);
-    window->Bind(wxEVT_CHAR_HOOK, &MainWindow::OnKeyPress, this, wxID_ANY);
+    window->Bind(wxEVT_SIZE, &MainWind::OnSizeLWindow, this, wxID_ANY);
+    window->Bind(wxEVT_RIGHT_DOWN, &MainWind::OnFolderRightClick, this, wxID_ANY);
+    window->Bind(wxEVT_CHAR_HOOK, &MainWind::OnKeyPress, this, wxID_ANY);
 
-    window->Bind(wxEVT_AUX1_DOWN, &MainWindow::OnBackward, this);
-    window->Bind(wxEVT_AUX2_DOWN, &MainWindow::OnForward, this);
+    window->Bind(wxEVT_AUX1_DOWN, &MainWind::OnBackward, this);
+    window->Bind(wxEVT_AUX2_DOWN, &MainWind::OnForward, this);
 
     wxWrapSizer *sizer = new wxWrapSizer(wxHORIZONTAL);
     window->SetSizer(sizer);
@@ -52,13 +52,13 @@ wxScrolledWindow *MainWindow::CreateListingPanel() {
     return window;
 }
 
-InfoWindow *MainWindow::CreateInfoPanel() {
-    auto window = new InfoWindow(this, wxID_ANY, wxPoint(800, 0), wxSize(250, 600));
-    window->Bind(wxEVT_SIZE, &MainWindow::OnSizeIWindow, this);
+FileInfoSect *MainWind::CreateInfoPanel() {
+    auto window = new FileInfoSect(this, wxID_ANY, wxPoint(800, 0), wxSize(250, 600));
+    window->Bind(wxEVT_SIZE, &MainWind::OnSizeIWindow, this);
     return window;
 }
 
-wxBitmapButton *MainWindow::CreateBitmapButton(wxWindowID id, std::string name) {
+wxBitmapButton *MainWind::CreateBitmapButton(wxWindowID id, std::string name) {
     wxImage image = config.image[name]->Scale(38, 38, wxIMAGE_QUALITY_HIGH);
     wxImage image_hover = image.Copy();
     image_hover.ChangeHSV(1, 1, -0.25);
@@ -67,7 +67,7 @@ wxBitmapButton *MainWindow::CreateBitmapButton(wxWindowID id, std::string name) 
     return btn;
 }
 
-wxBoxSizer *MainWindow::CreateSizer() {
+wxBoxSizer *MainWind::CreateSizer() {
     wxBoxSizer *toolbarSizer = new wxBoxSizer(wxHORIZONTAL);
     toolbarSizer->AddSpacer(3);
     toolbarSizer->Add(backward, 0, wxALL);
@@ -88,7 +88,7 @@ wxBoxSizer *MainWindow::CreateSizer() {
     return sizer;
 }
 
-void MainWindow::ChangePath(std::filesystem::path path) {
+void MainWind::ChangePath(std::filesystem::path path) {
     std::error_code errorcode;
     if (this->current != path && std::filesystem::is_directory(path, errorcode)) {
         this->current = path;
@@ -99,7 +99,7 @@ void MainWindow::ChangePath(std::filesystem::path path) {
     }
 }
 
-void MainWindow::UpdatePathBreadCrumbs() {
+void MainWind::UpdatePathBreadCrumbs() {
     size_t rootlength = config.config["root"].length();
     std::string display = this->current.string().length() <= rootlength ? "" : this->current.string().substr(rootlength + 1);
     wxArrayString folders = wxSplit(wxString::FromUTF8(display), '/');
@@ -110,7 +110,7 @@ void MainWindow::UpdatePathBreadCrumbs() {
         breadcrumbs->Add(CreateBreadCrumbItem("<tt><b>&gt;</b></tt>", false), 0, wxEXPAND | wxALL, 1);
         auto item = CreateBreadCrumbItem(folder);
         item->SetName(wxString::FromUTF8(path.string()));
-        item->Bind(wxEVT_BUTTON, &MainWindow::OnBreadCrumbClick, this);
+        item->Bind(wxEVT_BUTTON, &MainWind::OnBreadCrumbClick, this);
         breadcrumbs->Add(item, 0, wxEXPAND | wxALL, 1);
     }
     if (folders.empty()) {
@@ -118,14 +118,14 @@ void MainWindow::UpdatePathBreadCrumbs() {
     }
 }
 
-wxButton *MainWindow::CreateBreadCrumbItem(wxString label, bool enabled) {
+wxButton *MainWind::CreateBreadCrumbItem(wxString label, bool enabled) {
     auto item = new wxButton(this, wxID_ANY, label, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxBU_EXACTFIT);
     item->SetLabelMarkup(label);
     item->Enable(enabled);
     return item;
 }
 
-void MainWindow::RefreshPath(bool reload) {
+void MainWind::RefreshPath(bool reload) {
     auto *sizer = lwindow->GetSizer();
     sizer->Clear(reload);
     this->selected_files = 0;
@@ -142,10 +142,10 @@ void MainWindow::RefreshPath(bool reload) {
                 file_cards.push_back(card);
             }
         }
-        this->file_cards.sort(CardPanel::CompareCards());
-        this->folder_cards.sort(CardPanel::CompareCards());
+        this->file_cards.sort(CardCtrl::CompareCards());
+        this->folder_cards.sort(CardCtrl::CompareCards());
     } else {
-        auto remove_cards = [](CardPanel *card) {
+        auto remove_cards = [](CardCtrl *card) {
             bool result = card->to_remove;
             if (result) delete card;
             return result;
@@ -167,18 +167,18 @@ void MainWindow::RefreshPath(bool reload) {
     lwindow->Refresh();
 }
 
-void MainWindow::RefreshStatusText() {
+void MainWind::RefreshStatusText() {
     std::string text = std::to_string(folder_cards.size()) + " Folders, " + std::to_string(file_cards.size()) + " Files";
     SetStatusText(wxString::FromUTF8(text));
 }
 
-const wxSize MainWindow::CalcSize(int min_height, int width) {
+const wxSize MainWind::CalcSize(int min_height, int width) {
     auto newSize = this->GetClientSize();
     auto height = std::max(min_height, 2 * (newSize.y - 32) / 3);
     return width > 0 ? wxSize(width, height) : wxSize(newSize.x + width, height);
 }
 
-void MainWindow::ExecuteMenuEvent(int eventId) {
+void MainWind::ExecuteMenuEvent(int eventId) {
     const std::filesystem::path path = selected_card->file.path;
     if (eventId & RUNNER_EVENT) {
         int runner_id = eventId & RUNNER_MASK;
@@ -198,13 +198,13 @@ void MainWindow::ExecuteMenuEvent(int eventId) {
     }
 }
 
-CardPanel *MainWindow::CreateCard(std::filesystem::directory_entry entry) {
-    auto card = new CardPanel(this, entry);
-    card->Bind(wxEVT_RIGHT_DOWN, &MainWindow::OnFolderRightClick, this, wxID_ANY);
+CardCtrl *MainWind::CreateCard(std::filesystem::directory_entry entry) {
+    auto card = new CardCtrl(this, entry);
+    card->Bind(wxEVT_RIGHT_DOWN, &MainWind::OnFolderRightClick, this, wxID_ANY);
     return card;
 }
 
-void MainWindow::OnSizeLWindow(wxSizeEvent &event) {
+void MainWind::OnSizeLWindow(wxSizeEvent &event) {
     int width = lwindow->m_width;
     int items = width / 200;
     int spacing = items ? (width % 200) / items : 0;
@@ -217,20 +217,20 @@ void MainWindow::OnSizeLWindow(wxSizeEvent &event) {
     event.Skip();
 }
 
-void MainWindow::OnSizeIWindow(wxSizeEvent &event) {
+void MainWind::OnSizeIWindow(wxSizeEvent &event) {
     iwindow->SetSize(CalcSize(600, 250));
     Refresh();
     event.Skip();
 }
 
-void MainWindow::OnBackward(wxEvent &event) {
+void MainWind::OnBackward(wxEvent &event) {
     if (current != this->config.config["root"]) {
         forward_paths.push_front(current);
         ChangePath(current.parent_path());
     }
 }
 
-void MainWindow::OnForward(wxEvent &event) {
+void MainWind::OnForward(wxEvent &event) {
     if (forward_paths.size() > 0) {
         std::string path = forward_paths.front();
         forward_paths.pop_front();
@@ -238,16 +238,16 @@ void MainWindow::OnForward(wxEvent &event) {
     }
 }
 
-void MainWindow::OnBreadCrumbClick(wxCommandEvent &event) {
+void MainWind::OnBreadCrumbClick(wxCommandEvent &event) {
     wxButton *breadcrumb = (wxButton *)event.GetEventObject();
     ChangePath(breadcrumb->GetName().ToUTF8().data());
 }
 
-void MainWindow::OnFolderMenuClick(wxCommandEvent &evt) {
+void MainWind::OnFolderMenuClick(wxCommandEvent &evt) {
     ExecuteMenuEvent(evt.GetId());
 }
 
-void MainWindow::OnKeyPress(wxKeyEvent &event) {
+void MainWind::OnKeyPress(wxKeyEvent &event) {
     int uc = event.GetKeyCode();
     // int event_first = 2001;
     if (event.ControlDown()) {
@@ -272,17 +272,17 @@ void MainWindow::OnKeyPress(wxKeyEvent &event) {
         }
     }
     if(uc == WXK_F6) {
-        auto gw = new GamepadWindow(this);
+        auto gw = new GamepadWind(this);
         gw->Show();
     }
     event.Skip();
 }
 
-void MainWindow::OnFolderRightClick(wxMouseEvent &evt) {
+void MainWind::OnFolderRightClick(wxMouseEvent &evt) {
     wxMenu menu;
     for (uint i = 0; i < config.runners.size(); i++) {
         menu.Append(RUNNER_EVENT + i, config.runners[i].first);
     }
-    menu.Connect(wxEVT_MENU, wxCommandEventHandler(MainWindow::OnFolderMenuClick), nullptr, this);
+    menu.Connect(wxEVT_MENU, wxCommandEventHandler(MainWind::OnFolderMenuClick), nullptr, this);
     PopupMenu(&menu);
 }

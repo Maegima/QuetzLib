@@ -1,6 +1,6 @@
 
 /*
- * @file InfoWindow.hpp
+ * @file FileInfoSect.hpp
  * @author André Lucas Maegima
  * @brief Information Window class definition
  * @version 0.5
@@ -10,19 +10,19 @@
  *
  */
 
-#ifndef _INFOWINDOW_HPP_
-#define _INFOWINDOW_HPP_
+#ifndef __FILEINFOSECT__
+#define __FILEINFOSECT__
 
 #include <wx/wx.h>
 #include <list>
 
-class InfoWindow : public wxPanel {
+class FileInfoSect : public wxPanel {
    public:
-    InfoWindow(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size);
+    FileInfoSect(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size);
 
     void FillGrid(std::list<std::pair<wxString, wxString>> lines);
    private:
     wxPanel* CreateCenteredText(wxString label, wxSize size = wxDefaultSize);
 };
 
-#endif  // _INFOWINDOW_HPP_
+#endif  // __FILEINFOSECT__

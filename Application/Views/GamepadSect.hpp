@@ -1,5 +1,5 @@
 /**
- * @file GamepadPanel.hpp
+ * @file GamepadSect.hpp
  * @author André Lucas Maegima
  * @brief
  * @version 0.5
@@ -9,26 +9,26 @@
  *
  */
 
-#ifndef __GAMEPADPANEL__
-#define __GAMEPADPANEL__
+#ifndef __GAMEPADSECT__
+#define __GAMEPADSECT__
 
 #include <wx/wx.h>
 #include <wx/tglbtn.h>
 #include "Models/Gamepad.hpp"
-#include "AxisDisplayPanel.hpp"
+#include "AxisDisplaySect.hpp"
 
-class GamepadPanel : public wxPanel {
+class GamepadSect : public wxPanel {
   private:
     Gamepad controller;
 
   public:
     std::vector<wxToggleButton *> hats;
     std::vector<wxToggleButton *> buttons;
-    std::vector<AxisDisplayPanel *> axes;
+    std::vector<AxisDisplaySect *> axes;
 
-    GamepadPanel(wxWindow *parent, SDL_JoystickID id);
+    GamepadSect(wxWindow *parent, SDL_JoystickID id);
     SDL_JoystickID Id();
     SDL_Gamepad *GetGamepad();
 };
 
-#endif // __GAMEPADPANEL__
+#endif // __GAMEPADSECT__

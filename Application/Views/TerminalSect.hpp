@@ -1,6 +1,6 @@
 
 /**
- * @file TerminalPanel.hpp
+ * @file TerminalSect.hpp
  * @author André Lucas Maegima
  * @brief
  * @version 0.5
@@ -10,14 +10,14 @@
  *
  */
 
-#ifndef __TERMINALPANEL__
-#define __TERMINALPANEL__
+#ifndef __TERMINALSECT__
+#define __TERMINALSECT__
 
 #include <wx/wx.h>
 #include <wx/textctrl.h>
 #include <sstream>
 
-class TerminalPanel : public wxTextCtrl {
+class TerminalSect : public wxTextCtrl {
   private:
     const wxColour bg_color = wxColour(17, 15, 40);
     const wxColour err_color = wxColour(250, 130, 50);
@@ -31,11 +31,11 @@ class TerminalPanel : public wxTextCtrl {
     void WriteBuffered(std::stringstream &stream, const wxTextAttr &style, const std::string &text);
 
   public:
-    TerminalPanel(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size);
+    TerminalSect(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size);
     void WriteOut(wxThreadEvent &event);
     void WriteErr(wxThreadEvent &event);
     void FlushTrm(wxThreadEvent &event);
     void RunCommand(const std::string &command, const std::vector<std::string> &args);
 };
 
-#endif // __TERMINALPANEL__
+#endif // __TERMINALSECT__

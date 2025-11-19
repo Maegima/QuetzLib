@@ -1,5 +1,5 @@
 /**
- * @file AxisDisplayPanel.hpp
+ * @file AxisDisplaySect.hpp
  * @author André Lucas Maegima
  * @brief
  * @version 0.5
@@ -9,15 +9,15 @@
  *
  */
 
-#ifndef __AXISDISPLAYPANEL__
-#define __AXISDISPLAYPANEL__
+#ifndef __AXISDISPLAYSECT__
+#define __AXISDISPLAYSECT__
 
 #include <wx/wx.h>
-#include "TriggerPanel.hpp"
+#include "TriggerCtrl.hpp"
 
-class AxisDisplayPanel : public wxPanel {
+class AxisDisplaySect : public wxPanel {
   public:
-    AxisDisplayPanel(wxWindow *parent, int axes, int x_axis = 0, int y_axis = 1);
+    AxisDisplaySect(wxWindow *parent, int axes, int x_axis = 0, int y_axis = 1);
     void UpdatePosition(int x, int y);
     wxChoice *fst_axis;
     wxChoice *snd_axis;
@@ -28,8 +28,8 @@ class AxisDisplayPanel : public wxPanel {
   private:
     int color = 0;
     wxPanel *AxisPanel;
-    TriggerPanel *TriggerX;
-    TriggerPanel *TriggerY;
+    TriggerCtrl *TriggerX;
+    TriggerCtrl *TriggerY;
     void OnPaint(wxPaintEvent &event);
     void OnSize(wxSizeEvent &event);
     void OnKeyPress(wxKeyEvent &event);
@@ -40,4 +40,4 @@ class AxisDisplayPanel : public wxPanel {
     };
 };
 
-#endif //__AXISDISPLAYPANEL__
+#endif //__AXISDISPLAYSECT__

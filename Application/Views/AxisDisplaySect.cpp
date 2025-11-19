@@ -1,15 +1,15 @@
-#include "AxisDisplayPanel.hpp"
+#include "AxisDisplaySect.hpp"
 #include <wx/dcbuffer.h>
 
-AxisDisplayPanel::AxisDisplayPanel(wxWindow *parent, int axes, int x_axis, int y_axis)
+AxisDisplaySect::AxisDisplaySect(wxWindow *parent, int axes, int x_axis, int y_axis)
 : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SUNKEN) {
     AxisPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(80, 80));
     AxisPanel->SetBackgroundStyle(wxBG_STYLE_PAINT); // Indicate the control is user-painted
     AxisPanel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR));
-    AxisPanel->Bind(wxEVT_PAINT, &AxisDisplayPanel::OnPaint, this);
-    AxisPanel->Bind(wxEVT_SIZE, &AxisDisplayPanel::OnSize, this);
-    AxisPanel->Bind(wxEVT_KEY_DOWN, &AxisDisplayPanel::OnKeyPress, this);
-    Bind(wxEVT_CHOICE, &AxisDisplayPanel::OnChangeType, this, TYPE_CHANGE);
+    AxisPanel->Bind(wxEVT_PAINT, &AxisDisplaySect::OnPaint, this);
+    AxisPanel->Bind(wxEVT_SIZE, &AxisDisplaySect::OnSize, this);
+    AxisPanel->Bind(wxEVT_KEY_DOWN, &AxisDisplaySect::OnKeyPress, this);
+    Bind(wxEVT_CHOICE, &AxisDisplaySect::OnChangeType, this, TYPE_CHANGE);
 
     wxArrayString choices;
     choices.Alloc(axes);
@@ -27,10 +27,10 @@ AxisDisplayPanel::AxisDisplayPanel(wxWindow *parent, int axes, int x_axis, int y
     sel_type->SetSelection(0);
     choiceSizer->Add(sel_type, 1, wxEXPAND, 0);
 
-    TriggerX = new TriggerPanel(this, true);
+    TriggerX = new TriggerCtrl(this, true);
     TriggerX->Hide();
 
-    TriggerY = new TriggerPanel(this, true);
+    TriggerY = new TriggerCtrl(this, true);
     TriggerY->Hide();
 
     auto sizer = new wxBoxSizer(wxVERTICAL);
@@ -41,14 +41,14 @@ AxisDisplayPanel::AxisDisplayPanel(wxWindow *parent, int axes, int x_axis, int y
     SetSizer(sizer);
 }
 
-void AxisDisplayPanel::UpdatePosition(int x, int y) {
+void AxisDisplaySect::UpdatePosition(int x, int y) {
     pos_x = x;
     pos_y = y;
     TriggerX->SetValue(x);
     TriggerY->SetValue(y);
     Refresh();
 }
-void AxisDisplayPanel::OnPaint(wxPaintEvent &event) {
+void AxisDisplaySect::OnPaint(wxPaintEvent &event) {
     wxAutoBufferedPaintDC dc(AxisPanel);
     dc.Clear();
 
@@ -67,12 +67,12 @@ void AxisDisplayPanel::OnPaint(wxPaintEvent &event) {
     dc.DrawCircle(innerX, innerY, 10);
 }
 
-void AxisDisplayPanel::OnSize(wxSizeEvent &event) {
+void AxisDisplaySect::OnSize(wxSizeEvent &event) {
     AxisPanel->Refresh();
     event.Skip();
 }
 
-void AxisDisplayPanel::OnKeyPress(wxKeyEvent &event) {
+void AxisDisplaySect::OnKeyPress(wxKeyEvent &event) {
     if (event.GetKeyCode() == WXK_LEFT) {
         color = (color + 1) % wxSYS_COLOUR_MAX;
         AxisPanel->SetBackgroundColour(wxSystemSettings::GetColour((wxSystemColour)color));
@@ -84,7 +84,7 @@ void AxisDisplayPanel::OnKeyPress(wxKeyEvent &event) {
     AxisPanel->Refresh();
 }
 
-void AxisDisplayPanel::OnChangeType(wxCommandEvent &event) {
+void AxisDisplaySect::OnChangeType(wxCommandEvent &event) {
     long sel = event.GetSelection();
     if(sel == 0) {
         AxisPanel->Show();

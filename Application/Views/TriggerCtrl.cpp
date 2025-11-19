@@ -1,26 +1,26 @@
-#include "TriggerPanel.hpp"
+#include "TriggerCtrl.hpp"
 #include <wx/dcbuffer.h>
 
-TriggerPanel::TriggerPanel(wxWindow *parent, bool bidirectional)
+TriggerCtrl::TriggerCtrl(wxWindow *parent, bool bidirectional)
 : wxControl(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, 30), wxBORDER_SUNKEN | wxWANTS_CHARS),
   bidirectional(bidirectional) {
     SetBackgroundStyle(wxBG_STYLE_PAINT);
-    Bind(wxEVT_PAINT, &TriggerPanel::OnPaint, this);
-    Bind(wxEVT_SIZE, &TriggerPanel::OnSize, this);
+    Bind(wxEVT_PAINT, &TriggerCtrl::OnPaint, this);
+    Bind(wxEVT_SIZE, &TriggerCtrl::OnSize, this);
 }
 
-void TriggerPanel::SetValue(int val) {
+void TriggerCtrl::SetValue(int val) {
     if (val >= min_value && val <= max_value && val != value) {
         value = val;
         Refresh();
     }
 }
 
-int TriggerPanel::GetValue() {
+int TriggerCtrl::GetValue() {
     return value;
 }
 
-void TriggerPanel::SetRange(int min, int max) {
+void TriggerCtrl::SetRange(int min, int max) {
     min_value = min;
     max_value = max;
     if (min_value > value) value = min;
@@ -28,24 +28,24 @@ void TriggerPanel::SetRange(int min, int max) {
     Refresh();
 }
 
-void TriggerPanel::SetDeadZone(int val) {
+void TriggerCtrl::SetDeadZone(int val) {
     if (dead_zone != val) {
         dead_zone = std::abs(val);
         Refresh();
     }
 }
 
-void TriggerPanel::OnPaint(wxPaintEvent &event) {
+void TriggerCtrl::OnPaint(wxPaintEvent &event) {
     wxAutoBufferedPaintDC dc(this);
     Draw(dc);
 }
 
-void TriggerPanel::OnSize(wxSizeEvent &event) {
+void TriggerCtrl::OnSize(wxSizeEvent &event) {
     Refresh();
     event.Skip();
 }
 
-void TriggerPanel::Draw(wxDC &dc) {
+void TriggerCtrl::Draw(wxDC &dc) {
     wxSize size = GetClientSize();
     int width = size.GetWidth();
     int height = size.GetHeight();
@@ -86,7 +86,7 @@ void TriggerPanel::Draw(wxDC &dc) {
     dc.DrawLabel(label, wxRect(0, 0, width, height), wxALIGN_CENTER);
 }
 
-void TriggerPanel::DrawDeadZone(wxDC &dc, int progressX, int width, int height) {
+void TriggerCtrl::DrawDeadZone(wxDC &dc, int progressX, int width, int height) {
     int range = max_value - min_value;
     int deadZoneStartX = width * double(-dead_zone - min_value) / range;
     int deadZoneEndX = width * double(dead_zone - min_value) / range;

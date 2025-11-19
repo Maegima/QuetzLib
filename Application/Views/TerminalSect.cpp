@@ -1,9 +1,9 @@
-#include "TerminalPanel.hpp"
+#include "TerminalSect.hpp"
 #include "Controllers/Process.hpp"
 #include <sys/poll.h>
 #include <sys/wait.h>
 
-TerminalPanel::TerminalPanel(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size)
+TerminalSect::TerminalSect(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size)
 : wxTextCtrl(parent, id, wxEmptyString, pos, size, wxTE_MULTILINE) {
     SetEditable(false);
     SetBackgroundColour(bg_color);
@@ -12,12 +12,12 @@ TerminalPanel::TerminalPanel(wxWindow *parent, wxWindowID id, const wxPoint &pos
     SetDefaultStyle(out_style);
     err_style = wxTextAttr(err_color);
     err_style.SetFont(font);
-    Bind(wxEVT_THREAD, &TerminalPanel::WriteErr, this, Process::WRITE_ERR);
-    Bind(wxEVT_THREAD, &TerminalPanel::WriteOut, this, Process::WRITE_OUT);
-    Bind(wxEVT_THREAD, &TerminalPanel::FlushTrm, this, Process::FLUSH_TRM);
+    Bind(wxEVT_THREAD, &TerminalSect::WriteErr, this, Process::WRITE_ERR);
+    Bind(wxEVT_THREAD, &TerminalSect::WriteOut, this, Process::WRITE_OUT);
+    Bind(wxEVT_THREAD, &TerminalSect::FlushTrm, this, Process::FLUSH_TRM);
 }
 
-void TerminalPanel::WriteToTerminal(std::stringstream &stream, const wxTextAttr &style) {
+void TerminalSect::WriteToTerminal(std::stringstream &stream, const wxTextAttr &style) {
     std::string line;
     SetDefaultStyle(style);
     while (getline(stream, line))
@@ -25,7 +25,7 @@ void TerminalPanel::WriteToTerminal(std::stringstream &stream, const wxTextAttr 
     stream.clear();
 }
 
-void TerminalPanel::WriteBuffered(std::stringstream &stream, const wxTextAttr &style, const std::string &text) {
+void TerminalSect::WriteBuffered(std::stringstream &stream, const wxTextAttr &style, const std::string &text) {
     size_t iend = text.find_last_of('\n');
     if (iend == std::string::npos) {
         stream << text;
@@ -36,19 +36,19 @@ void TerminalPanel::WriteBuffered(std::stringstream &stream, const wxTextAttr &s
     stream << text.substr(iend + 1, text.length() - iend);
 }
 
-void TerminalPanel::WriteOut(wxThreadEvent &event) {
+void TerminalSect::WriteOut(wxThreadEvent &event) {
     WriteBuffered(out_stream, out_style, event.GetString().utf8_string());
 }
 
-void TerminalPanel::WriteErr(wxThreadEvent &event) {
+void TerminalSect::WriteErr(wxThreadEvent &event) {
     WriteBuffered(err_stream, err_style, event.GetString().utf8_string());
 }
 
-void TerminalPanel::FlushTrm(wxThreadEvent &event) {
+void TerminalSect::FlushTrm(wxThreadEvent &event) {
     WriteToTerminal(out_stream, out_style);
     WriteToTerminal(err_stream, err_style);
 }
 
-void TerminalPanel::RunCommand(const std::string &command, const std::vector<std::string> &args) {
+void TerminalSect::RunCommand(const std::string &command, const std::vector<std::string> &args) {
     Process(this).Execute(command, args);
 }

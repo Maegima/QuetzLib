@@ -1,10 +1,10 @@
-#include "GamepadWindow.hpp"
+#include "GamepadWind.hpp"
 
-GamepadWindow::GamepadWindow(wxWindow *parent)
+GamepadWind::GamepadWind(wxWindow *parent)
 : wxFrame(parent, wxID_ANY, "Gamepad", wxDefaultPosition, wxSize(1200, 800)),
   parent(parent),
   input_timer(this, TIMER) {
-    Bind(wxEVT_TIMER, &GamepadWindow::ReadInputs, this, TIMER);
+    Bind(wxEVT_TIMER, &GamepadWind::ReadInputs, this, TIMER);
 
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
     if ((started = SDL_Init(SDL_INIT_GAMEPAD | SDL_INIT_SENSOR))) {
@@ -12,7 +12,7 @@ GamepadWindow::GamepadWindow(wxWindow *parent)
         SDL_JoystickID *ids = SDL_GetGamepads(&count);
         for (int i = 0; i < count; i++) {
             try {
-                auto gp = new GamepadPanel(this, ids[i]);
+                auto gp = new GamepadSect(this, ids[i]);
                 controllers.insert({ids[i], gp});
                 sizer->Add(gp, 0, wxEXPAND | wxALL, 0);
             } catch (std::ios_base::failure &e) {
@@ -27,7 +27,7 @@ GamepadWindow::GamepadWindow(wxWindow *parent)
     SetSizer(sizer);
 }
 
-GamepadWindow::~GamepadWindow() {
+GamepadWind::~GamepadWind() {
     input_timer.Stop();
     for (const auto &ctrl : controllers) {
         if (ctrl.second) delete ctrl.second;
@@ -35,7 +35,7 @@ GamepadWindow::~GamepadWindow() {
     if (started) SDL_Quit();
 }
 
-void GamepadWindow::ReadInputs(wxTimerEvent &event) {
+void GamepadWind::ReadInputs(wxTimerEvent &event) {
     SDL_Event ctrl_event;
     while (SDL_PollEvent(&ctrl_event)) {
         if (ctrl_event.type == SDL_EVENT_QUIT) {
@@ -43,7 +43,7 @@ void GamepadWindow::ReadInputs(wxTimerEvent &event) {
             parent->Close();
         } else if (ctrl_event.type == SDL_EVENT_GAMEPAD_ADDED) {
             if (!controllers.contains(ctrl_event.gdevice.which)) {
-                auto gp = new GamepadPanel(this, ctrl_event.gdevice.which);
+                auto gp = new GamepadSect(this, ctrl_event.gdevice.which);
                 GetSizer()->Add(gp, 0, wxEXPAND | wxALL, 0);
                 GetSizer()->Layout();
                 controllers.insert({ctrl_event.gdevice.which, gp});

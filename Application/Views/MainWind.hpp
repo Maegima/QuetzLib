@@ -1,35 +1,35 @@
-#ifndef __MAINWINDOW__
-#define __MAINWINDOW__
+#ifndef __MAINWIND__
+#define __MAINWIND__
 
 #include <wx/wx.h>
 #include <wx/sizer.h>
-#include "CardPanel.hpp"
-#include "InfoWindow.hpp"
+#include "CardCtrl.hpp"
+#include "FileInfoSect.hpp"
 #include <filesystem>
 #include <list>
 #include "Controllers/Configuration.hpp"
-#include "Views/TerminalPanel.hpp"
+#include "Views/TerminalSect.hpp"
 
-class MainWindow : public wxFrame {
+class MainWind : public wxFrame {
    public:
     Configuration config;
     wxScrolledWindow* lwindow;
-    InfoWindow* iwindow;
-    TerminalPanel *twindow;
+    FileInfoSect* iwindow;
+    TerminalSect *twindow;
     wxBoxSizer* breadcrumbs;
     wxBitmapButton* forward;
     wxBitmapButton* backward;
 
     int selected_folders;
     int selected_files;
-    CardPanel* selected_card;
+    CardCtrl* selected_card;
 
     std::filesystem::path current;
-    std::list<CardPanel*> folder_cards;
-    std::list<CardPanel*> file_cards;
+    std::list<CardCtrl*> folder_cards;
+    std::list<CardCtrl*> file_cards;
     std::list<std::string> forward_paths;
 
-    MainWindow();
+    MainWind();
 
     void ChangePath(std::filesystem::path path);
     void ExecuteMenuEvent(int eventId);
@@ -37,11 +37,11 @@ class MainWindow : public wxFrame {
 
    private:
     wxScrolledWindow* CreateListingPanel();
-    InfoWindow* CreateInfoPanel();
+    FileInfoSect* CreateInfoPanel();
     wxBitmapButton* CreateBitmapButton(wxWindowID id, std::string name);
     wxBoxSizer* CreateSizer();
     wxButton* CreateBreadCrumbItem(wxString label, bool enabled = true);
-    CardPanel* CreateCard(std::filesystem::directory_entry entry);
+    CardCtrl* CreateCard(std::filesystem::directory_entry entry);
 
     void UpdatePathBreadCrumbs();
     void RefreshPath(bool reload = true);
@@ -56,4 +56,4 @@ class MainWindow : public wxFrame {
     void OnBackward(wxEvent& event);
     void OnForward(wxEvent& event);
 };
-#endif // __MAINWINDOW__
+#endif // __MAINWIND__

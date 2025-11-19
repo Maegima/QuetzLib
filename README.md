@@ -5,7 +5,7 @@ It provides a simple interface to organize your games and applications, with bui
 
 ## ✨ Features
 - 📂 **Game Library Management** – Add and organize your games in a clean list.
-- 🎮 **Gamepad Support** – Includes a `GamepadWindow` and `AxisDisplayPanel` to visualize controller input.
+- 🎮 **Gamepad Support** – Includes a `GamepadWind` and `AxisDisplaySect` to visualize controller input.
 - 🚀 **Launcher Functionality** – Quickly launch games or applications from the interface.
 - ⚡ **Cross-Platform Build** – Built in C++ with a Makefile for easy compilation.
 - 📜 **MIT Licensed** – Free to use, modify, and distribute.

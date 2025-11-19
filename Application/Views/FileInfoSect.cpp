@@ -1,5 +1,5 @@
 /**
- * @file InfoWindow.cpp
+ * @file FileInfoSect.cpp
  * @author André Lucas Maegima
  * @brief Information Window class implementation
  * @version 0.5
@@ -8,16 +8,16 @@
  * @copyright Copyright (c) 2025
  *
  */
-#include "InfoWindow.hpp"
+#include "FileInfoSect.hpp"
 #include <wx/hyperlink.h>
 
-InfoWindow::InfoWindow(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
+FileInfoSect::FileInfoSect(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent, wxID_ANY, pos, size, wxBORDER_SUNKEN) {
     SetBackgroundColour(*wxWHITE);
     SetSizer(new wxBoxSizer(wxVERTICAL));
 }
 
-void InfoWindow::FillGrid(std::list<std::pair<wxString, wxString>> lines) {
+void FileInfoSect::FillGrid(std::list<std::pair<wxString, wxString>> lines) {
     auto sizer = this->GetSizer();
     sizer->Clear(true);
     for (auto const& pair : lines) {
@@ -30,7 +30,7 @@ void InfoWindow::FillGrid(std::list<std::pair<wxString, wxString>> lines) {
     this->Refresh();
 }
 
-wxPanel* InfoWindow::CreateCenteredText(wxString label, wxSize size) {
+wxPanel* FileInfoSect::CreateCenteredText(wxString label, wxSize size) {
     wxPanel* panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, size);
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
     wxControl *text = nullptr;

@@ -1,5 +1,5 @@
 /**
- * @file GamepadWindow.hpp
+ * @file GamepadWind.hpp
  * @author André Lucas Maegima
  * @brief
  * @version 0.5
@@ -9,28 +9,28 @@
  *
  */
 
-#ifndef __GAMEPADWINDOW__
-#define __GAMEPADWINDOW__
+#ifndef __GAMEPADWIND__
+#define __GAMEPADWIND__
 
 #include <wx/wx.h>
 #include <wx/timer.h>
 #include <wx/tglbtn.h>
-#include "GamepadPanel.hpp"
+#include "GamepadSect.hpp"
 #include <map>
 
-class GamepadWindow : public wxFrame {
+class GamepadWind : public wxFrame {
   private:
     wxWindow *parent;
     wxTimer input_timer;
     bool started;
-    std::map<SDL_JoystickID, GamepadPanel*> controllers;
+    std::map<SDL_JoystickID, GamepadSect*> controllers;
 
     enum EVENTS { TIMER = 4000 };
 
     void ReadInputs(wxTimerEvent &event);
   public:
-    GamepadWindow(wxWindow *parent);
-    ~GamepadWindow();
+    GamepadWind(wxWindow *parent);
+    ~GamepadWind();
 };
 
-#endif // __GAMEPADWINDOW__
+#endif // __GAMEPADWIND__

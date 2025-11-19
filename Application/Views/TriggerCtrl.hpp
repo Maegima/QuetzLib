@@ -1,5 +1,5 @@
 /**
- * @file TriggerPanel.hpp
+ * @file TriggerCtrl.hpp
  * @author André Lucas Maegima
  * @brief
  * @version 0.5
@@ -9,14 +9,14 @@
  *
  */
 
-#ifndef __TRIGGERPANEL__
-#define __TRIGGERPANEL__
+#ifndef __TRIGGERCTRL__
+#define __TRIGGERCTRL__
 
 #include <wx/wx.h>
 
-class TriggerPanel : public wxControl {
+class TriggerCtrl : public wxControl {
   public:
-    TriggerPanel(wxWindow *parent, bool bidirectional);
+    TriggerCtrl(wxWindow *parent, bool bidirectional);
     void SetValue(int val);
     int GetValue();
     void SetRange(int min, int max);
@@ -35,4 +35,4 @@ class TriggerPanel : public wxControl {
     void DrawDeadZone(wxDC &dc, int progressX, int width, int height);
 };
 
-#endif // __TRIGGERPANEL__
+#endif // __TRIGGERCTRL__
