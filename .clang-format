@@ -5,5 +5,7 @@ SortIncludes: Never
 ColumnLimit: 0
 AllowShortFunctionsOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+SpaceBeforeParens: Never
+SpaceAfterCStyleCast: false
 #AllowShortLoopsOnASingleLine: true
 #AllowShortBlocksOnASingleLine: Empty

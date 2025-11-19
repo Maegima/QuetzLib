@@ -18,12 +18,12 @@
 class AxisDisplaySect : public wxPanel {
   public:
     AxisDisplaySect(wxWindow *parent, int axes, int x_axis = 0, int y_axis = 1);
-    void UpdatePosition(int x, int y);
-    wxChoice *fst_axis;
-    wxChoice *snd_axis;
-    wxChoice *sel_type;
+    void UpdatePosition(uint8_t xid, int16_t value);
+    int GetIdX();
+    int GetIdY();
 
   private:
+    wxChoice *axis_sel[2];
     StickCtrl *Stick;
     TriggerCtrl *TriggerX;
     TriggerCtrl *TriggerY;

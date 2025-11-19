@@ -7,15 +7,15 @@ GamepadWind::GamepadWind(wxWindow *parent)
     Bind(wxEVT_TIMER, &GamepadWind::ReadInputs, this, TIMER);
 
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
-    if ((started = SDL_Init(SDL_INIT_GAMEPAD | SDL_INIT_SENSOR))) {
+    if((started = SDL_Init(SDL_INIT_GAMEPAD | SDL_INIT_SENSOR))) {
         int count;
         SDL_JoystickID *ids = SDL_GetGamepads(&count);
-        for (int i = 0; i < count; i++) {
+        for(int i = 0; i < count; i++) {
             try {
                 auto gp = new GamepadSect(this, ids[i]);
                 controllers.insert({ids[i], gp});
                 sizer->Add(gp, 0, wxEXPAND | wxALL, 0);
-            } catch (std::ios_base::failure &e) {
+            } catch(std::ios_base::failure &e) {
                 wxLogError("Failed to open Gamepad %u: %s", ids[i], e.what());
             }
         }
@@ -29,20 +29,20 @@ GamepadWind::GamepadWind(wxWindow *parent)
 
 GamepadWind::~GamepadWind() {
     input_timer.Stop();
-    for (const auto &ctrl : controllers) {
-        if (ctrl.second) delete ctrl.second;
+    for(const auto &ctrl : controllers) {
+        if(ctrl.second) delete ctrl.second;
     }
-    if (started) SDL_Quit();
+    if(started) SDL_Quit();
 }
 
 void GamepadWind::ReadInputs(wxTimerEvent &event) {
     SDL_Event ctrl_event;
-    while (SDL_PollEvent(&ctrl_event)) {
-        if (ctrl_event.type == SDL_EVENT_QUIT) {
+    while(SDL_PollEvent(&ctrl_event)) {
+        if(ctrl_event.type == SDL_EVENT_QUIT) {
             input_timer.Stop();
             parent->Close();
-        } else if (ctrl_event.type == SDL_EVENT_GAMEPAD_ADDED) {
-            if (!controllers.contains(ctrl_event.gdevice.which)) {
+        } else if(ctrl_event.type == SDL_EVENT_GAMEPAD_ADDED) {
+            if(!controllers.contains(ctrl_event.gdevice.which)) {
                 auto gp = new GamepadSect(this, ctrl_event.gdevice.which);
                 GetSizer()->Add(gp, 0, wxEXPAND | wxALL, 0);
                 GetSizer()->Layout();
@@ -52,42 +52,27 @@ void GamepadWind::ReadInputs(wxTimerEvent &event) {
             }
         }
         auto id = ctrl_event.gdevice.which;
-        if (controllers.contains(id)) {
+        if(controllers.contains(id)) {
             auto gp = controllers[id];
             Uint8 bt;
-            int16_t axis;
-            Uint8 xid;
-            switch (ctrl_event.type) {
+            switch(ctrl_event.type) {
             case SDL_EVENT_JOYSTICK_BUTTON_UP:
             case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
                 bt = ctrl_event.jbutton.button;
-                if (bt < gp->buttons.size()) {
+                if(bt < gp->buttons.size()) {
                     gp->buttons[bt]->SetValue(SDL_EVENT_JOYSTICK_BUTTON_DOWN == ctrl_event.type);
                 }
                 break;
 
             case SDL_EVENT_JOYSTICK_HAT_MOTION:
                 bt = ctrl_event.jhat.value;
-                for (uint i = 0; i < gp->hats.size(); i++) {
+                for(uint i = 0; i < gp->hats.size(); i++) {
                     gp->hats[i]->SetValue((bt >> i) & 1);
                 }
                 break;
 
             case SDL_EVENT_JOYSTICK_AXIS_MOTION:
-                axis = ctrl_event.jaxis.value;
-                xid = ctrl_event.jaxis.axis;
-                for(auto xp : gp->axes) {
-                    auto fsel = xp->fst_axis->GetSelection();
-                    auto ssel = xp->snd_axis->GetSelection();
-                    if(fsel == xid) {
-                        auto pos = ssel > -1 ? SDL_GetJoystickAxis(SDL_GetJoystickFromID(id), ssel) : 0;
-                        xp->UpdatePosition(axis, pos);
-                    }
-                    if(ssel == xid) {
-                        auto pos = fsel > -1 ? SDL_GetJoystickAxis(SDL_GetJoystickFromID(id), fsel) : 0;
-                        xp->UpdatePosition(pos, axis);
-                    }
-                }
+                gp->SetAxis(ctrl_event.jaxis.axis, ctrl_event.jaxis.value);
                 break;
 
             case SDL_EVENT_GAMEPAD_REMOVED:

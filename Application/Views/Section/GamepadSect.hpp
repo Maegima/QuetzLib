@@ -29,6 +29,7 @@ class GamepadSect : public wxPanel {
     GamepadSect(wxWindow *parent, SDL_JoystickID id);
     SDL_JoystickID Id();
     SDL_Gamepad *GetGamepad();
+    void SetAxis(uint8_t xid, int16_t value);
 };
 
 #endif // __GAMEPADSECT__
