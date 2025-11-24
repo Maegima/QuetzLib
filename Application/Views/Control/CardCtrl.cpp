@@ -46,18 +46,18 @@ wxStaticText *CardCtrl::CreateLabel(std::filesystem::directory_entry entry) {
     wxString name = wxString::FromUTF8(entry.path().filename());
     wxStaticText *text = new wxStaticText(this, wxID_ANY, name, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL);
     int max_text_size = 180;
-    while (text->m_width > 200) {
+    while(text->m_width > 200) {
         int parts = text->m_width / max_text_size;
-        int size = name.length() / (parts + 1);
+        int size = name.length()/(parts+1);
         wxString newstr = "";
-        for (int i = 0; i < parts; i++) {
+        for(int i = 0; i < parts; i++) {
             newstr += name.substr(i * size, size) + "\n";
         }
         newstr += name.substr(parts * size);
         text->SetLabel(newstr);
         max_text_size -= 10;
     }
-    if (entry.is_directory()) {
+    if(entry.is_directory()) {
         text->Bind(wxEVT_LEFT_DCLICK, &CardCtrl::OnFolderLeftClick, this, wxID_ANY);
     } else {
         text->Bind(wxEVT_LEFT_DOWN, &CardCtrl::OnFileLeftClick, this, wxID_ANY);
@@ -73,7 +73,7 @@ Image *CardCtrl::CreateImage(std::filesystem::directory_entry entry) {
     std::vector<std::string> img_exts = parent->config.image_extension;
     std::string extension = entry.path().extension().string();
     Image *img = new Image(this, entry, parent->config);
-    if (entry.is_directory()) {
+    if(entry.is_directory()) {
         img->Bind(wxEVT_LEFT_DCLICK, &CardCtrl::OnFolderLeftClick, this, wxID_ANY);
     } else {
         img->Bind(wxEVT_LEFT_DOWN, &CardCtrl::OnFileLeftClick, this, wxID_ANY);
@@ -89,33 +89,33 @@ std::pair<CardCtrl::CardIterator, CardCtrl::CardIterator> CardCtrl::GetIterators
     CardIterator it = this->parent->file_cards.begin();
     CardIterator first = this->parent->file_cards.end();
     CardIterator second = this->parent->file_cards.end();
-    while (it != this->parent->file_cards.end() && first == this->parent->file_cards.end()) {
+    while(it != this->parent->file_cards.end() && first == this->parent->file_cards.end()) {
         CardCtrl *card = *(it++);
-        if (card == c1 || card == c2) first = it;
+        if(card == c1 || card == c2) first = it;
     }
-    while (it != this->parent->file_cards.end() && second == this->parent->file_cards.end()) {
+    while(it != this->parent->file_cards.end() && second == this->parent->file_cards.end()) {
         CardCtrl *card = *(it++);
-        if (card == c1 || card == c2) second = it;
+        if(card == c1 || card == c2) second = it;
     }
     return {first, second};
 }
 
 void CardCtrl::OnLeftClick(wxMouseEvent &event) {
     SetFocus();
-    if (wxGetKeyState(WXK_CONTROL)) {
+    if(wxGetKeyState(WXK_CONTROL)) {
         SelectItem(!this->selected);
-    } else if (wxGetKeyState(WXK_SHIFT)) {
+    } else if(wxGetKeyState(WXK_SHIFT)) {
         CardCtrl *last_card = this->parent->selected_card;
-        if (last_card != nullptr) {
+        if(last_card != nullptr) {
             auto [begin, end] = GetIterators(last_card, this);
-            for (auto it = begin; it != end; it++) {
+            for(auto it = begin; it != end; it++) {
                 (*it)->SelectItem(true);
             }
         }
         SelectItem(true);
     } else {
         std::vector<std::list<CardCtrl *>> cards = {parent->folder_cards, parent->file_cards};
-        for (auto const &card : std::ranges::join_view(cards)) {
+        for(auto const &card : std::ranges::join_view(cards)) {
             card->SelectItem(false, false);
         }
         SelectItem(true);
@@ -125,15 +125,15 @@ void CardCtrl::OnLeftClick(wxMouseEvent &event) {
 }
 
 void CardCtrl::SelectItem(bool select, bool highlight) {
-    if (this->selected == select) {
+    if(this->selected == select) {
         return;
     }
     this->selected = select;
-    if (this->selected) {
+    if(this->selected) {
         this->image->ChangeLightness(130);
         this->label->SetBackgroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_GRAYTEXT));
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHTTEXT));
-    } else if (highlight) {
+    } else if(highlight) {
         this->image->ChangeLightness(130);
         this->label->SetBackgroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHT));
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHTTEXT));
@@ -142,7 +142,7 @@ void CardCtrl::SelectItem(bool select, bool highlight) {
         this->label->SetBackgroundColour(*wxWHITE);
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_BTNTEXT));
     }
-    if (this->file.type == FileType::Directory) {
+    if(this->file.type == FileType::Directory) {
         this->parent->selected_folders += this->selected ? 1 : -1;
     } else {
         this->parent->selected_files += this->selected ? 1 : -1;
@@ -164,9 +164,9 @@ void CardCtrl::OnFolderLeftClick(wxMouseEvent &event) {
 
 void CardCtrl::OnFileLeftClick(wxMouseEvent &event) {
     std::list<std::pair<wxString, wxString>> list;
-    for (const auto &[key, expression] : parent->config.file_info) {
+    for(const auto &[key, expression] : parent->config.file_info) {
         std::string value = file.get_value(expression);
-        if (value != "<null>") {
+        if(value != "<null>") {
             list.push_back({key, wxString::FromUTF8(value)});
         }
     }
@@ -174,7 +174,7 @@ void CardCtrl::OnFileLeftClick(wxMouseEvent &event) {
 }
 
 bool CardCtrl::CompareCards::operator()(const CardCtrl *c1, const CardCtrl *c2) const {
-    if (c1->file.type != c2->file.type)
+    if(c1->file.type != c2->file.type)
         return c1->file.type == FileType::Directory;
     return c1->name < c2->name;
 }
@@ -197,7 +197,7 @@ void CardCtrl::OnEnterPanel(wxMouseEvent &event) {
     this->image->ChangeLightness(150);
     this->label->SetBackgroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHT));
     this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHTTEXT));
-    if (selected) {
+    if(selected) {
         this->label->SetBackgroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_GRAYTEXT));
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHTTEXT));
     }
@@ -206,19 +206,19 @@ void CardCtrl::OnEnterPanel(wxMouseEvent &event) {
 void CardCtrl::OnLeavePanel(wxMouseEvent &event) {
     auto mousePosition = ClientToScreen(event.GetPosition());
     auto rect = GetScreenRect();
-    if (CheckPosition(rect, mousePosition, 0)) {
+    if(CheckPosition(rect, mousePosition, 0)) {
         this->image->ChangeLightness(150);
         this->label->SetBackgroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHT));
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHTTEXT));
     } else {
-        if (selected)
+        if(selected)
             this->image->ChangeLightness(130);
         else
             this->image->ChangeLightness(100);
         this->label->SetBackgroundColour(*wxWHITE);
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_BTNTEXT));
     }
-    if (selected) {
+    if(selected) {
         this->label->SetBackgroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_GRAYTEXT));
         this->label->SetForegroundColour(wxSystemSettings::GetColour(wxSystemColour::wxSYS_COLOUR_HIGHLIGHTTEXT));
     }

@@ -16,7 +16,7 @@
 inline wxAppInitializer wxTheAppInitializer((wxAppInitializerFunction) new Application);
 
 int main(int argc, char *argv[]) {
-    if (argc == 1) {
+    if(argc == 1) {
         wxImage::AddHandler(new wxPNGHandler());
         wxImage::AddHandler(new wxJPEGHandler());
         return wxEntry(argc, argv);

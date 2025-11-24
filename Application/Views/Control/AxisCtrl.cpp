@@ -2,7 +2,7 @@
 #include <wx/dcbuffer.h>
 
 AxisCtrl::AxisCtrl(wxWindow *parent, const wxSize &size, const wxPoint &position, long style, wxWindowID id)
- : wxControl(parent, id, position, size, style) {
+: wxControl(parent, id, position, size, style) {
     SetBackgroundStyle(wxBG_STYLE_PAINT);
     Bind(wxEVT_PAINT, &AxisCtrl::OnPaint, this);
     Bind(wxEVT_SIZE, &AxisCtrl::OnSize, this);
@@ -40,4 +40,3 @@ void AxisCtrl::OnSize(wxSizeEvent &event) {
     Refresh();
     event.Skip();
 }
-

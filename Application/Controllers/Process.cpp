@@ -28,13 +28,13 @@ int Process::RunCommand(const std::string &cmd, const std::vector<std::string> &
     dup2(errfd[1], 2);
     close(outfd[1]);
     close(errfd[1]);
-    std::vector<const char*> c_args;
-    c_args.reserve(args.size() + 1);
-    for(const std::string & str : args) {
+    std::vector<const char *> c_args;
+    c_args.reserve(args.size()+1);
+    for(const std::string &str : args) {
         c_args.push_back(str.c_str());
     }
     c_args.push_back(nullptr);
-    int result = execvp(cmd.c_str(), (char *const*) c_args.data());
+    int result = execvp(cmd.c_str(), (char *const *)c_args.data());
     return result;
 }
 
@@ -44,7 +44,7 @@ int Process::PollCommand() {
     int result = 0;
     try {
         std::thread(Process::Loop, term, pid, outfd[0], errfd[0]).detach();
-    } catch (std::system_error &e){
+    } catch(std::system_error &e) {
         close(outfd[0]);
         close(errfd[0]);
         wxLogError("Failed to start thread to communicate with process %d, message: %s", pid, e.what());
@@ -74,7 +74,7 @@ void Process::Loop(wxWindow *term, int pid, int outfd, int errfd) {
                 close(fds[i].fd);
                 fds[i].fd = -1;
                 n--;
-            } else if(fds[i].revents != 0){
+            } else if(fds[i].revents != 0) {
                 std::stringstream ss;
                 ss << "fd: " << i << " event: " << fds[i].revents << "\n";
                 SendEvent(term, ss.str(), 1);

@@ -17,16 +17,16 @@ void StickCtrl::Draw(wxDC &dc) {
     dc.Clear();
 
     wxSize size = this->GetClientSize();
-    int centerX = size.GetX() / 2;
-    int centerY = size.GetY() / 2;
-    int radius = std::min(centerX, centerY) - 10;
+    int centerX = size.GetX()/2;
+    int centerY = size.GetY()/2;
+    int radius = std::min(centerX, centerY)-10;
 
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
     dc.SetPen(*wxBLACK_PEN);
     dc.DrawCircle(centerX, centerY, radius);
 
-    int innerX = centerX + (int)((double)x * radius / 32768.0);
-    int innerY = centerY + (int)((double)y * radius / 32768.0);
+    int innerX = centerX+(int)((double)x * radius/32768.0);
+    int innerY = centerY+(int)((double)y * radius/32768.0);
     dc.SetBrush(*wxBLUE_BRUSH);
     dc.DrawCircle(innerX, innerY, 10);
 }

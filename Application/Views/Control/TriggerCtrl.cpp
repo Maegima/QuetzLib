@@ -24,18 +24,18 @@ void TriggerCtrl::Draw(wxDC &dc) {
     int progressX = static_cast<int>(width * valueRatio);
 
     dc.SetPen(*wxBLACK_PEN);
-    if (!bidirectional) {
+    if(!bidirectional) {
         dc.SetBrush(*wxGREY_BRUSH);
         dc.DrawRectangle(0, 0, progressX, height);
-    } else if (value > 0) {
+    } else if(value > 0) {
         dc.SetBrush(*wxBLUE_BRUSH);
         dc.DrawRectangle(zeroX, 0, progressX - zeroX, height);
-    } else if (value < 0) {
+    } else if(value < 0) {
         dc.SetBrush(*wxRED_BRUSH);
         dc.DrawRectangle(progressX, 0, zeroX - progressX, height);
     }
 
-    if (dead_zone > 0) {
+    if(dead_zone > 0) {
         DrawDeadZone(dc, progressX, width, height);
     }
 
@@ -50,7 +50,7 @@ void TriggerCtrl::DrawDeadZone(wxDC &dc, int progressX, int width, int height) {
     int deadZoneStartX = width * double(-dead_zone - min_value) / range;
     int deadZoneEndX = width * double(dead_zone - min_value) / range;
     int deadZoneWidth = deadZoneEndX - deadZoneStartX;
-    if (!bidirectional) {
+    if(!bidirectional) {
         deadZoneStartX = 0;
         deadZoneEndX = deadZoneWidth;
     }
@@ -64,7 +64,7 @@ void TriggerCtrl::DrawDeadZone(wxDC &dc, int progressX, int width, int height) {
     int spacing = 8;
     wxPen hatchPen(wxColour(160, 160, 160), lineThickness);
     dc.SetPen(hatchPen);
-    for (int i = -height; i < deadZoneWidth; i += spacing) {
+    for(int i = -height; i < deadZoneWidth; i += spacing) {
         dc.DrawLine(i, deadZoneStartX + height, deadZoneStartX + i + height, 0);
     }
     dc.SetPen(*wxTRANSPARENT_PEN);
@@ -73,15 +73,15 @@ void TriggerCtrl::DrawDeadZone(wxDC &dc, int progressX, int width, int height) {
     dc.DrawRectangle(deadZoneEndX, 0, height, height);
 
     dc.SetPen(*wxBLACK_PEN);
-    if (!bidirectional) {
-        if (progressX > deadZoneEndX) {
+    if(!bidirectional) {
+        if(progressX > deadZoneEndX) {
             dc.SetBrush(*wxGREY_BRUSH);
             dc.DrawRectangle(deadZoneEndX, 0, progressX - deadZoneEndX, height);
         }
-    } else if (progressX < deadZoneStartX) {
+    } else if(progressX < deadZoneStartX) {
         dc.SetBrush(*wxRED_BRUSH);
-        dc.DrawRectangle(deadZoneStartX, 0, -(deadZoneStartX - progressX) + 1, height);
-    } else if (progressX > deadZoneEndX) {
+        dc.DrawRectangle(deadZoneStartX, 0, -(deadZoneStartX - progressX)+1, height);
+    } else if(progressX > deadZoneEndX) {
         dc.SetBrush(*wxBLUE_BRUSH);
         dc.DrawRectangle(deadZoneEndX, 0, progressX - deadZoneEndX, height);
     }

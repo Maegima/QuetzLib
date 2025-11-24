@@ -20,20 +20,20 @@ TerminalSect::TerminalSect(wxWindow *parent, wxWindowID id, const wxPoint &pos, 
 void TerminalSect::WriteToTerminal(std::stringstream &stream, const wxTextAttr &style) {
     std::string line;
     SetDefaultStyle(style);
-    while (getline(stream, line))
+    while(getline(stream, line))
         AppendText("> " + line + "\n");
     stream.clear();
 }
 
 void TerminalSect::WriteBuffered(std::stringstream &stream, const wxTextAttr &style, const std::string &text) {
     size_t iend = text.find_last_of('\n');
-    if (iend == std::string::npos) {
+    if(iend == std::string::npos) {
         stream << text;
         return;
     }
     stream << text.substr(0, iend);
     WriteToTerminal(stream, style);
-    stream << text.substr(iend + 1, text.length() - iend);
+    stream << text.substr(iend+1, text.length() - iend);
 }
 
 void TerminalSect::WriteOut(wxThreadEvent &event) {

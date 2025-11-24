@@ -14,7 +14,7 @@
 
 bool Application::OnInit() {
     wxLog::SetActiveTarget(new wxLogStderr());
-    MainWind* window = new MainWind();
+    MainWind *window = new MainWind();
     window->Show(true);
     return true;
 }

@@ -17,12 +17,13 @@
 #include <list>
 
 class FileInfoSect : public wxPanel {
-   public:
-    FileInfoSect(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size);
+  public:
+    FileInfoSect(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size);
 
     void FillGrid(std::list<std::pair<wxString, wxString>> lines);
-   private:
-    wxPanel* CreateCenteredText(wxString label, wxSize size = wxDefaultSize);
+
+  private:
+    wxPanel *CreateCenteredText(wxString label, wxSize size = wxDefaultSize);
 };
 
 #endif  // __FILEINFOSECT__
