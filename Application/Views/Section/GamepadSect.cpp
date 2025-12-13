@@ -8,7 +8,7 @@ GamepadSect::GamepadSect(wxWindow *parent, SDL_JoystickID id) : wxPanel(parent),
 
     auto fst_box = firstSection->GetStaticBox();
     for(auto &hat : controller.hats) {
-        auto bt = new wxToggleButton(fst_box, wxID_ANY, "hat");
+        auto bt = new HatsCtrl(fst_box);
         hats.push_back(bt);
         firstSection->Add(bt, 0, wxALL | wxEXPAND, 1);
         hat = hats.size()-1;

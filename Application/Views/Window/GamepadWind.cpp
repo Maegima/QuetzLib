@@ -65,10 +65,7 @@ void GamepadWind::ReadInputs(wxTimerEvent &event) {
                 break;
 
             case SDL_EVENT_JOYSTICK_HAT_MOTION:
-                bt = ctrl_event.jhat.value;
-                for(uint i = 0; i < gp->hats.size(); i++) {
-                    gp->hats[i]->SetValue((bt >> i) & 1);
-                }
+                gp->hats[ctrl_event.jhat.hat]->SetValue(ctrl_event.jhat.value);
                 break;
 
             case SDL_EVENT_JOYSTICK_AXIS_MOTION:

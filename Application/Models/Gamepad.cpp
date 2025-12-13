@@ -9,7 +9,7 @@ Gamepad::Gamepad(SDL_JoystickID id) {
     int size = -1;
     size = SDL_GetNumJoystickHats(joystick);
     if(size == -1) throw new std::ios_base::failure(SDL_GetError());
-    hats.resize(size*4, -1);
+    hats.resize(size, -1);
     size = SDL_GetNumJoystickAxes(joystick);
     if(size == -1) throw new std::ios_base::failure(SDL_GetError());
     axes.resize(size, -1);

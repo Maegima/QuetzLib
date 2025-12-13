@@ -16,13 +16,14 @@
 #include <wx/tglbtn.h>
 #include "Models/Gamepad.hpp"
 #include "Views/Section/AxisDisplaySect.hpp"
+#include "Views/Control/HatsCtrl.hpp"
 
 class GamepadSect : public wxPanel {
   private:
     Gamepad controller;
 
   public:
-    std::vector<wxToggleButton *> hats;
+    std::vector<HatsCtrl *> hats;
     std::vector<wxToggleButton *> buttons;
     std::vector<AxisDisplaySect *> axes;
 
