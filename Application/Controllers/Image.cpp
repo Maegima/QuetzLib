@@ -13,10 +13,7 @@
 #include "Algorithm.hpp"
 
 Image::Image(wxWindow *parent, const std::filesystem::directory_entry &entry, Configuration &config)
-: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(200, 200)),
-  path(entry.path()),
-  width(-1),
-  height(-1),
+: wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(200, 200)), path(entry.path()), width(-1), height(-1),
   changed(false) {
     std::string key = GetKey(entry, config);
     if(key == "dynamic") {
@@ -33,8 +30,7 @@ Image::Image(wxWindow *parent, const std::filesystem::directory_entry &entry, Co
 }
 
 Image::~Image() {
-    if(type == Image::Type::DYNAMIC)
-        delete static_img;
+    if(type == Image::Type::DYNAMIC) delete static_img;
 }
 
 void Image::LoadImage() {

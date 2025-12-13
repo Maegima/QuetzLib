@@ -1,7 +1,6 @@
 #include "StickCtrl.hpp"
 
-StickCtrl::StickCtrl(wxWindow *parent)
-: AxisCtrl(parent, wxSize(80, 80)) {
+StickCtrl::StickCtrl(wxWindow *parent) : AxisCtrl(parent, wxSize(80, 80)) {
     SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUBAR));
 }
 

@@ -2,9 +2,10 @@ BasedOnStyle: LLVM
 IndentWidth: 4
 ConstructorInitializerIndentWidth: 0
 SortIncludes: Never
-ColumnLimit: 0
-AllowShortFunctionsOnASingleLine: All
+ColumnLimit: 110
+AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortEnumsOnASingleLine: true
 SpaceBeforeParens: Never
 SpaceAfterCStyleCast: false
 #AllowShortLoopsOnASingleLine: true

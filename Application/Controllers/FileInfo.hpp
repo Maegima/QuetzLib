@@ -15,17 +15,16 @@
 #include <string>
 #include <filesystem>
 
-enum FileType { Directory,
-                File };
+enum FileType { Directory, File };
 
 class FileInfo {
-   private:
+  private:
     uint32_t md5sum[4];
     long created;
     long modified;
     long accessed;
 
-   public:
+  public:
     off_t size;
     std::filesystem::path path;
     FileType type;
@@ -42,6 +41,6 @@ class FileInfo {
     const std::string get_value(const std::string &expression) const;
 };
 
-std::ostream& operator<<(std::ostream& os, const FileInfo& file);
+std::ostream &operator<<(std::ostream &os, const FileInfo &file);
 
 #endif

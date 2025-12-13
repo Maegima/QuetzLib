@@ -98,7 +98,8 @@ const std::string FileInfo::operator[](const std::string &idx) const {
 const std::string FileInfo::get_value(const std::string &expression) const {
     auto parts = Algorithm::split<std::vector>(expression, ',');
     std::string value = expression;
-    if(parts.size() > 0 && parts[0].size() > 7 && parts[0].substr(0, 6) == "<file." && parts[0].back() == '>') {
+    if(parts.size() > 0 && parts[0].size() > 7 && parts[0].substr(0, 6) == "<file." &&
+       parts[0].back() == '>') {
         value = (*this)[parts[0].substr(6, parts[0].size()-7)];
     }
     if(parts.size() > 2) {
@@ -119,8 +120,8 @@ const std::string FileInfo::get_value(const std::string &expression) const {
 }
 
 string FileInfo::to_string() const {
-    return created_str() + " " + modified_str() + " " + accessed_str() +
-           " " + md5sumString() + " " + size_str() + " " + type_str() + " " + path.string();
+    return created_str() + " " + modified_str() + " " + accessed_str() + " " + md5sumString() + " " +
+           size_str() + " " + type_str() + " " + path.string();
 }
 
 ostream &operator<<(ostream &os, const FileInfo &file) {

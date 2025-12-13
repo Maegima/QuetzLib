@@ -17,29 +17,29 @@
 #include "Configuration.hpp"
 
 class Image : public wxPanel {
-   public:
+  public:
     enum Type { STATIC, DYNAMIC };
-    Image(wxWindow* parent, const std::filesystem::directory_entry& path, Configuration& config);
+    Image(wxWindow *parent, const std::filesystem::directory_entry &path, Configuration &config);
     ~Image();
 
-    void OnPaint(wxPaintEvent& evt);
-    void render(wxDC& dc);
-    void OnSize(wxSizeEvent& event);
+    void OnPaint(wxPaintEvent &evt);
+    void render(wxDC &dc);
+    void OnSize(wxSizeEvent &event);
     void ChangeLightness(int alpha);
 
-   private:
+  private:
     std::string path;
     int width;
     int height;
     bool changed;
     Type type;
-    wxImage* static_img;
-    wxImage* default_img;
+    wxImage *static_img;
+    wxImage *default_img;
     wxImage image;
     wxBitmap resized;
 
     void LoadImage();
-    std::string GetKey(const std::filesystem::directory_entry& path, Configuration& config);
+    std::string GetKey(const std::filesystem::directory_entry &path, Configuration &config);
 };
 
 #endif /* DISKLIST_IMAGE_HPP */

@@ -26,4 +26,4 @@ class FileInfoSect : public wxPanel {
     wxPanel *CreateCenteredText(wxString label, wxSize size = wxDefaultSize);
 };
 
-#endif  // __FILEINFOSECT__
+#endif // __FILEINFOSECT__

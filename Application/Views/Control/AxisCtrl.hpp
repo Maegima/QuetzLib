@@ -17,10 +17,8 @@
 
 class AxisCtrl : public wxControl {
   public:
-    AxisCtrl(wxWindow *parent,
-             const wxSize &size = wxDefaultSize,
-             const wxPoint &position = wxDefaultPosition,
-             long style = wxBORDER_SUNKEN,
+    AxisCtrl(wxWindow *parent, const wxSize &size = wxDefaultSize,
+             const wxPoint &position = wxDefaultPosition, long style = wxBORDER_SUNKEN,
              wxWindowID id = wxID_ANY);
     ~AxisCtrl();
     void SetX(int16_t value);

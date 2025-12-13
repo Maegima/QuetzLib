@@ -30,12 +30,7 @@ class Process {
   public:
     Process(wxWindow *term);
     int Execute(const std::string &cmd, const std::vector<std::string> &args = {});
-    enum EVENT {
-        WRITE = 3000,
-        WRITE_OUT = 3000,
-        WRITE_ERR = 3001,
-        FLUSH_TRM = 3002
-    };
+    enum EVENT { WRITE = 3000, WRITE_OUT = 3000, WRITE_ERR = 3001, FLUSH_TRM = 3002 };
 
 }; // namespace Process
 

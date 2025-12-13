@@ -25,7 +25,8 @@ void TerminalSect::WriteToTerminal(std::stringstream &stream, const wxTextAttr &
     stream.clear();
 }
 
-void TerminalSect::WriteBuffered(std::stringstream &stream, const wxTextAttr &style, const std::string &text) {
+void TerminalSect::WriteBuffered(std::stringstream &stream, const wxTextAttr &style,
+                                 const std::string &text) {
     size_t iend = text.find_last_of('\n');
     if(iend == std::string::npos) {
         stream << text;

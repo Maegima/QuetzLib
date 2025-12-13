@@ -29,9 +29,7 @@ class AxisDisplaySect : public wxPanel {
     TriggerCtrl *TriggerY;
     void OnChangeType(wxCommandEvent &event);
 
-    enum EVENT {
-        TYPE_CHANGE = 5000
-    };
+    enum EVENT { TYPE_CHANGE = 5000 };
 };
 
 #endif //__AXISDISPLAYSECT__

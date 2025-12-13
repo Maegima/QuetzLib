@@ -18,12 +18,12 @@
 class TriggerCtrl : public AxisCtrl {
   public:
     TriggerCtrl(wxWindow *parent, bool bidirectional);
-    void SetValue(uint16_t val){ SetX(val); }
+    void SetValue(uint16_t val) { SetX(val); }
 
   private:
     static const int16_t min_value = INT16_MIN;
     static const int16_t max_value = INT16_MAX;
-    int dead_zone = (max_value-min_value)/8;
+    int dead_zone = (max_value - min_value)/8;
     bool bidirectional;
 
     void Draw(wxDC &dc);
